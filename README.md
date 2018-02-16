@@ -1,3 +1,17 @@
+WORK IN PROGRESS(WIP): move to low-level rest client
+------------
+
+Stages and status:
+1. Cut all dependencies with transport client and use rest client  [DONE]  
+2. Build enough logic to replace all functions in ElasticsearchTemplate class
+3. Do other classes 
+4. Remover other dependencies (have a chat with Oliver)
+5. [Optional] incorporate several PR from community  
+
+
+
+
+
 Spring Data Elasticsearch
 =========================
 

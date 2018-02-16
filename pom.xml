@@ -19,7 +19,7 @@
     <properties>
         <commonscollections>3.2.1</commonscollections>
         <commonslang>2.6</commonslang>
-        <elasticsearch>5.5.0</elasticsearch>
+        <elasticsearch>6.1.2</elasticsearch>
         <log4j>2.8.2</log4j>
         <springdata.commons>2.1.0.BUILD-SNAPSHOT</springdata.commons>
         <java-module-name>spring.data.elasticsearch</java-module-name>
@@ -65,23 +65,11 @@
             <version>${jodatime}</version>
         </dependency>
 
-        <!-- Elasticsearch -->
-        <dependency>
-            <groupId>org.elasticsearch</groupId>
-            <artifactId>elasticsearch</artifactId>
-            <version>${elasticsearch}</version>
-        </dependency>
-
+        <!-- Elasticsearch REST client-->
         <dependency>
             <groupId>org.elasticsearch.client</groupId>
-            <artifactId>transport</artifactId>
+            <artifactId>elasticsearch-rest-client</artifactId>
             <version>${elasticsearch}</version>
-            <exclusions>
-                <exclusion>
-                    <groupId>commons-logging</groupId>
-                    <artifactId>commons-logging</artifactId>
-                </exclusion>
-            </exclusions>
         </dependency>
 
         <dependency>
@@ -162,14 +150,6 @@
             <artifactId>servlet-api</artifactId>
             <version>3.0-alpha-1</version>
             <scope>test</scope>
-        </dependency>
-
-        <dependency>
-      <!-- required by elasticsearch -->
-            <groupId>org.elasticsearch.plugin</groupId>
-            <artifactId>transport-netty4-client</artifactId>
-            <version>${elasticsearch}</version>
-            <!--<scope>test</scope>-->
         </dependency>
 
         <dependency>
