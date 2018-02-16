@@ -22,6 +22,7 @@ import java.util.Map;
  *
  * @author Rizwan Idrees
  * @author Mohsin Husen
+ * @author Artur Konczak
  */
 public class ElasticsearchException extends RuntimeException {
 
@@ -47,5 +48,9 @@ public class ElasticsearchException extends RuntimeException {
 
 	public Map<String, String> getFailedDocuments() {
 		return failedDocuments;
+	}
+
+	public String getDetailedMessage(){
+		return getMessage();
 	}
 }

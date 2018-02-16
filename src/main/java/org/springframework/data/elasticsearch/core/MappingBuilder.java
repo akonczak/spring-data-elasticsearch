@@ -16,11 +16,8 @@
 package org.springframework.data.elasticsearch.core;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
-import org.elasticsearch.common.xcontent.XContentBuilder;
+import java.util.*;
+
 import org.springframework.core.ResolvableType;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.data.annotation.Transient;
@@ -38,7 +35,6 @@ import org.springframework.data.mapping.model.SimpleTypeHolder;
 import org.springframework.data.util.ClassTypeInformation;
 import org.springframework.data.util.TypeInformation;
 import static org.apache.commons.lang.StringUtils.*;
-import static org.elasticsearch.common.xcontent.XContentFactory.*;
 import static org.springframework.util.StringUtils.*;
 
 /**
@@ -76,9 +72,9 @@ class MappingBuilder {
 
 	private static SimpleTypeHolder SIMPLE_TYPE_HOLDER = SimpleTypeHolder.DEFAULT;
 
-	static XContentBuilder buildMapping(Class clazz, String indexType, String idFieldName, String parentType) throws IOException {
-
-		XContentBuilder mapping = jsonBuilder().startObject().startObject(indexType);
+	static Map buildMapping(Class clazz, String indexType, String idFieldName, String parentType) throws IOException {
+		Map<String,Object> mapping = new HashMap<>();
+/*		XContentBuilder mapping = jsonBuilder().startObject().startObject(indexType);
 		// Parent
 		if (hasText(parentType)) {
 			mapping.startObject(FIELD_PARENT).field(FIELD_TYPE, parentType).endObject();
@@ -89,10 +85,11 @@ class MappingBuilder {
 
 		mapEntity(xContentBuilder, clazz, true, idFieldName, EMPTY, false, FieldType.Auto, null);
 
-		return xContentBuilder.endObject().endObject().endObject();
+		return xContentBuilder.endObject().endObject().endObject();*/
+		return mapping;
 	}
 
-	private static void mapEntity(XContentBuilder xContentBuilder, Class clazz, boolean isRootObject, String idFieldName,
+/*	private static void mapEntity(XContentBuilder xContentBuilder, Class clazz, boolean isRootObject, String idFieldName,
 								  String nestedObjectFieldName, boolean nestedOrObjectField, FieldType fieldType, Field fieldAnnotation) throws IOException {
 
 		java.lang.reflect.Field[] fields = retrieveFields(clazz);
@@ -220,11 +217,11 @@ class MappingBuilder {
 		xContentBuilder.endObject();
 	}
 
-	/**
+	*//**
 	 * Apply mapping for a single @Field annotation
 	 *
 	 * @throws IOException
-	 */
+	 *//*
 	private static void addSingleFieldMapping(XContentBuilder xContentBuilder, java.lang.reflect.Field field,
 											  Field fieldAnnotation, boolean nestedOrObjectField) throws IOException {
 		xContentBuilder.startObject(field.getName());
@@ -254,11 +251,11 @@ class MappingBuilder {
 		xContentBuilder.endObject();
 	}
 
-	/**
+	*//**
 	 * Apply mapping for a single nested @Field annotation
 	 *
 	 * @throws IOException
-	 */
+	 *//*
 	private static void addNestedFieldMapping(XContentBuilder builder, java.lang.reflect.Field field,
 											  InnerField annotation) throws IOException {
 		builder.startObject(annotation.suffix());
@@ -281,11 +278,11 @@ class MappingBuilder {
 		builder.endObject();
 	}
 
-	/**
+	*//**
 	 * Multi field mappings for string type fields, support for sorts and facets
 	 *
 	 * @throws IOException
-	 */
+	 *//*
 	private static void addMultiFieldMapping(XContentBuilder builder, java.lang.reflect.Field field,
 											 MultiField annotation, boolean nestedOrObjectField) throws IOException {
 		builder.startObject(field.getName());
@@ -358,5 +355,5 @@ class MappingBuilder {
 
 	private static boolean isCompletionField(java.lang.reflect.Field field) {
 		return field.getType() == Completion.class;
-	}
+	}*/
 }

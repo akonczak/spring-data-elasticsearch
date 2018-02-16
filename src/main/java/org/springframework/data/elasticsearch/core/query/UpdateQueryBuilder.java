@@ -15,9 +15,6 @@
  */
 package org.springframework.data.elasticsearch.core.query;
 
-import org.elasticsearch.action.index.IndexRequest;
-import org.elasticsearch.action.update.UpdateRequest;
-
 /**
  * @author Rizwan Idrees
  * @author Mohsin Husen
@@ -25,8 +22,8 @@ import org.elasticsearch.action.update.UpdateRequest;
 public class UpdateQueryBuilder {
 
 	private String id;
-	private UpdateRequest updateRequest;
-	private IndexRequest indexRequest;
+	private String updateRequest;
+	private String indexRequest;
 	private String indexName;
 	private String type;
 	private Class clazz;
@@ -37,12 +34,12 @@ public class UpdateQueryBuilder {
 		return this;
 	}
 
-	public UpdateQueryBuilder withUpdateRequest(UpdateRequest updateRequest) {
+	public UpdateQueryBuilder withUpdateRequest(String updateRequest) {
 		this.updateRequest = updateRequest;
 		return this;
 	}
 
-	public UpdateQueryBuilder withIndexRequest(IndexRequest indexRequest) {
+	public UpdateQueryBuilder withIndexRequest(String indexRequest) {
 		this.indexRequest = indexRequest;
 		return this;
 	}
@@ -73,12 +70,12 @@ public class UpdateQueryBuilder {
 		updateQuery.setIndexName(indexName);
 		updateQuery.setType(type);
 		updateQuery.setClazz(clazz);
-		if (this.indexRequest != null) {
-			if (this.updateRequest == null) {
-				updateRequest = new UpdateRequest();
-			}
-			updateRequest.doc(indexRequest);
-		}
+//		if (this.indexRequest != null) {
+//			if (this.updateRequest == null) {
+//				updateRequest = new UpdateRequest();
+//			}
+//			updateRequest.doc(indexRequest);
+//		}
 		updateQuery.setUpdateRequest(updateRequest);
 		updateQuery.setDoUpsert(doUpsert);
 		return updateQuery;

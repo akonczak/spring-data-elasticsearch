@@ -18,12 +18,12 @@ package org.springframework.data.elasticsearch.core;
 
 import java.util.LinkedList;
 
-import org.elasticsearch.action.get.MultiGetResponse;
+import org.elasticsearch.client.Response;
 
 /**
  * @author Mohsin Husen
  */
 public interface MultiGetResultMapper {
 
-	<T> LinkedList<T> mapResults(MultiGetResponse responses, Class<T> clazz);
+	<T> LinkedList<T> mapResults(Response responses, Class<T> clazz);
 }

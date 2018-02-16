@@ -15,7 +15,7 @@
  */
 package org.springframework.data.elasticsearch.core;
 
-import org.elasticsearch.action.get.GetResponse;
+import org.elasticsearch.client.Response;
 
 /**
  * @author Artur Konczak
@@ -23,5 +23,5 @@ import org.elasticsearch.action.get.GetResponse;
  */
 public interface GetResultMapper {
 
-	<T> T mapResult(GetResponse response, Class<T> clazz);
+	<T> T mapResult(Response response, Class<T> clazz);
 }

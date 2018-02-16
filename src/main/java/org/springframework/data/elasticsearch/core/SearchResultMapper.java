@@ -15,9 +15,8 @@
  */
 package org.springframework.data.elasticsearch.core;
 
-import org.elasticsearch.action.search.SearchResponse;
+import org.elasticsearch.client.Response;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.elasticsearch.core.aggregation.AggregatedPage;
 
 /**
  * @author Artur Konczak
@@ -25,5 +24,5 @@ import org.springframework.data.elasticsearch.core.aggregation.AggregatedPage;
  */
 public interface SearchResultMapper {
 
-	<T> AggregatedPage<T> mapResults(SearchResponse response, Class<T> clazz, Pageable pageable);
+	<T> ScrolledPage<T> mapResults(Response response, Class<T> clazz, Pageable pageable);
 }

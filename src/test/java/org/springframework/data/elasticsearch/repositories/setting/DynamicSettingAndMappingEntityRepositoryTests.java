@@ -22,13 +22,13 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.lang.RandomStringUtils;
-import org.elasticsearch.index.query.QueryBuilders;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.elasticsearch.core.ElasticsearchTemplate;
 import org.springframework.data.elasticsearch.core.query.NativeSearchQueryBuilder;
+import org.springframework.data.elasticsearch.core.query.QueryBuilder;
 import org.springframework.data.elasticsearch.core.query.SearchQuery;
 import org.springframework.data.elasticsearch.entities.DynamicSettingAndMappingEntity;
 import org.springframework.test.context.ContextConfiguration;
@@ -98,7 +98,7 @@ public class DynamicSettingAndMappingEntityRepositoryTests {
 
 		//when
 		SearchQuery searchQuery = new NativeSearchQueryBuilder()
-				.withQuery(QueryBuilders.termQuery("email", dynamicSettingAndMappingEntity1.getEmail())).build();
+				.withQuery(QueryBuilder.termQuery("email", dynamicSettingAndMappingEntity1.getEmail())).build();
 
 		long count = elasticsearchTemplate.count(searchQuery, DynamicSettingAndMappingEntity.class);
 		List<DynamicSettingAndMappingEntity> entityList = elasticsearchTemplate.queryForList(searchQuery, DynamicSettingAndMappingEntity.class);

@@ -17,8 +17,6 @@ package org.springframework.data.elasticsearch.core.query;
 
 import java.util.Map;
 
-import org.elasticsearch.index.query.QueryBuilder;
-
 /**
  * AliasQuery is useful for creating new alias or deleting existing ones
  *
@@ -26,67 +24,67 @@ import org.elasticsearch.index.query.QueryBuilder;
  */
 public class AliasQuery {
 
-	private String indexName;
-	private String aliasName;
-	private QueryBuilder filterBuilder;
-	private Map<String, Object> filter;
-	private String searchRouting;
-	private String indexRouting;
-	private String routing;
+    private String indexName;
+    private String aliasName;
+    private QueryBuilder filterBuilder;
+    private Map<String, Object> filter;
+    private String searchRouting;
+    private String indexRouting;
+    private String routing;
 
-	public String getIndexName() {
-		return indexName;
-	}
+    public String getIndexName() {
+        return indexName;
+    }
 
-	public void setIndexName(String indexName) {
-		this.indexName = indexName;
-	}
+    public void setIndexName(String indexName) {
+        this.indexName = indexName;
+    }
 
-	public String getAliasName() {
-		return aliasName;
-	}
+    public String getAliasName() {
+        return aliasName;
+    }
 
-	public void setAliasName(String aliasName) {
-		this.aliasName = aliasName;
-	}
+    public void setAliasName(String aliasName) {
+        this.aliasName = aliasName;
+    }
 
-	public QueryBuilder getFilterBuilder() {
-		return filterBuilder;
-	}
+    public QueryBuilder getFilterBuilder() {
+        return filterBuilder;
+    }
 
-	public void setFilterBuilder(QueryBuilder filterBuilder) {
-		this.filterBuilder = filterBuilder;
-	}
+    public void setFilterBuilder(QueryBuilder filterBuilder) {
+        this.filterBuilder = filterBuilder;
+    }
 
-	public Map<String, Object> getFilter() {
-		return filter;
-	}
+    public Map<String, Object> getFilter() {
+        return filter;
+    }
 
-	public void setFilter(Map<String, Object> filter) {
-		this.filter = filter;
-	}
+    public void setFilter(Map<String, Object> filter) {
+        this.filter = filter;
+    }
 
-	public String getSearchRouting() {
-		return searchRouting;
-	}
+    public String getSearchRouting() {
+        return searchRouting;
+    }
 
-	public void setSearchRouting(String searchRouting) {
-		this.searchRouting = searchRouting;
-	}
+    public void setSearchRouting(String searchRouting) {
+        this.searchRouting = searchRouting;
+    }
 
-	public String getIndexRouting() {
-		return indexRouting;
-	}
+    public String getIndexRouting() {
+        return indexRouting;
+    }
 
-	public void setIndexRouting(String indexRouting) {
-		this.indexRouting = indexRouting;
-	}
+    public void setIndexRouting(String indexRouting) {
+        this.indexRouting = indexRouting;
+    }
 
-	public String getRouting() {
-		return routing;
-	}
+    public String getRouting() {
+        return routing;
+    }
 
-	public void setRouting(String routing) {
-		this.routing = routing;
-	}
+    public void setRouting(String routing) {
+        this.routing = routing;
+    }
 }

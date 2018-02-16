@@ -16,9 +16,9 @@
 
 package org.springframework.data.elasticsearch.core;
 
-import org.elasticsearch.action.search.SearchResponse;
+import org.elasticsearch.client.Response;
 
 public interface ResultsExtractor<T> {
 
-	T extract(SearchResponse response);
+	T extract(Response response);
 }

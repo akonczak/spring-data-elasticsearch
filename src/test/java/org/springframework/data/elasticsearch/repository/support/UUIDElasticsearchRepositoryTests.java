@@ -35,9 +35,10 @@ import org.springframework.data.elasticsearch.entities.SampleEntityUUIDKeyed;
 import org.springframework.data.elasticsearch.repositories.sample.SampleUUIDKeyedElasticsearchRepository;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-import static org.elasticsearch.index.query.QueryBuilders.*;
 import static org.hamcrest.Matchers.*;
 import static org.junit.Assert.*;
+import static org.springframework.data.elasticsearch.core.query.QueryBuilder.matchAllQuery;
+import static org.springframework.data.elasticsearch.core.query.QueryBuilder.termQuery;
 
 /**
  * @author Gad Akuka

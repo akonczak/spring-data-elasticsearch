@@ -19,8 +19,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
-import org.elasticsearch.action.ActionRequestValidationException;
-import org.elasticsearch.common.util.CollectionUtils;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -29,6 +27,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Order;
+import org.springframework.data.elasticsearch.ElasticsearchException;
 import org.springframework.data.elasticsearch.core.ElasticsearchTemplate;
 import org.springframework.data.elasticsearch.core.query.NativeSearchQueryBuilder;
 import org.springframework.data.elasticsearch.core.query.SearchQuery;
@@ -36,11 +35,14 @@ import org.springframework.data.elasticsearch.entities.SampleEntity;
 import org.springframework.data.elasticsearch.repositories.sample.SampleElasticsearchRepository;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.util.CollectionUtils;
+
 import static org.apache.commons.lang.RandomStringUtils.*;
-import static org.elasticsearch.index.query.QueryBuilders.*;
 import static org.hamcrest.Matchers.*;
 import static org.junit.Assert.*;
 import static org.springframework.data.domain.Sort.Direction.*;
+import static org.springframework.data.elasticsearch.core.query.QueryBuilder.matchAllQuery;
+import static org.springframework.data.elasticsearch.core.query.QueryBuilder.termQuery;
 
 /**
  * @author Rizwan Idrees
@@ -104,7 +106,7 @@ public class SimpleElasticsearchRepositoryTests {
 		assertThat(entityFromElasticSearch.isPresent(), is(true));
 	}
 
-	@Test(expected = ActionRequestValidationException.class)
+	@Test(expected = ElasticsearchException.class)
 	public void throwExceptionWhenTryingToInsertWithVersionButWithoutId() {
 		// given
 		SampleEntity sampleEntity = new SampleEntity();
@@ -230,7 +232,7 @@ public class SimpleElasticsearchRepositoryTests {
 
 		// then
 		assertNotNull("sample entities cant be null..", sampleEntities);
-		List<SampleEntity> entities = CollectionUtils.iterableAsArrayList(sampleEntities);
+		List<SampleEntity> entities = CollectionUtils.arrayToList(sampleEntities);
 		assertThat(entities.size(), is(2));
 	}
 

@@ -17,7 +17,6 @@ package org.springframework.data.elasticsearch.core.query;
 
 import java.util.Collection;
 import java.util.List;
-import org.elasticsearch.action.search.SearchType;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -28,8 +27,24 @@ import org.springframework.data.domain.Sort;
  * @author Rizwan Idrees
  * @author Mohsin Husen
  * @author Mark Paluch
+ * @author Artur Konczak
  */
 public interface Query {
+
+	public enum SearchType {
+		queryThenFetch("query_then_fetch"),
+		dfsQueryThenFetch("dfs_query_then_fetch");
+
+		private String code;
+
+		SearchType(String code){
+			this.code = code;
+		}
+
+		public String getCode(){
+			return code;
+		}
+	}
 
 	int DEFAULT_PAGE_SIZE = 10;
 	Pageable DEFAULT_PAGE = PageRequest.of(0, DEFAULT_PAGE_SIZE);

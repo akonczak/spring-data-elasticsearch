@@ -15,10 +15,8 @@
  */
 package org.springframework.data.elasticsearch.core;
 
-import org.elasticsearch.action.update.UpdateResponse;
-import org.elasticsearch.client.Client;
-import org.elasticsearch.cluster.metadata.AliasMetaData;
-import org.elasticsearch.common.Nullable;
+import org.elasticsearch.client.Response;
+import org.elasticsearch.client.RestClient;
 import org.springframework.data.domain.Page;
 import org.springframework.data.elasticsearch.core.convert.ElasticsearchConverter;
 import org.springframework.data.elasticsearch.core.mapping.ElasticsearchPersistentEntity;
@@ -46,7 +44,7 @@ public interface ElasticsearchOperations {
 	/**
 	 * @return elasticsearch client
 	 */
-	Client getClient();
+	RestClient getClient();
 
 	/**
 	 * Create an index for a class
@@ -363,7 +361,7 @@ public interface ElasticsearchOperations {
 	 * @param updateQuery
 	 * @return
 	 */
-	UpdateResponse update(UpdateQuery updateQuery);
+	Response update(UpdateQuery updateQuery);
 
 	/**
 	 * Bulk index all objects. Will do save or update
@@ -485,7 +483,6 @@ public interface ElasticsearchOperations {
 	 *
 	 * @param query The search query.
 	 * @param scrollTimeInMillis The time in millisecond for scroll feature
-	 * {@link org.elasticsearch.action.search.SearchRequestBuilder#setScroll(org.elasticsearch.common.unit.TimeValue)}.
 	 * @param clazz The class of entity to retrieve.
 	 * @return The scan id for input query.
 	 */
@@ -496,7 +493,6 @@ public interface ElasticsearchOperations {
 	 *
 	 * @param query The search query.
 	 * @param scrollTimeInMillis The time in millisecond for scroll feature
-	 * {@link org.elasticsearch.action.search.SearchRequestBuilder#setScroll(org.elasticsearch.common.unit.TimeValue)}.
 	 * @param mapper Custom impl to map result to entities
 	 * @return The scan id for input query.
 	 */
@@ -507,7 +503,6 @@ public interface ElasticsearchOperations {
 	 *
 	 * @param criteriaQuery The search query.
 	 * @param scrollTimeInMillis The time in millisecond for scroll feature
-	 * {@link org.elasticsearch.action.search.SearchRequestBuilder#setScroll(org.elasticsearch.common.unit.TimeValue)}.
 	 * @param clazz The class of entity to retrieve.
 	 * @return The scan id for input query.
 	 */
@@ -518,15 +513,14 @@ public interface ElasticsearchOperations {
 	 *
 	 * @param criteriaQuery The search query.
 	 * @param scrollTimeInMillis The time in millisecond for scroll feature
-	 * {@link org.elasticsearch.action.search.SearchRequestBuilder#setScroll(org.elasticsearch.common.unit.TimeValue)}.
 	 * @param mapper Custom impl to map result to entities
 	 * @return The scan id for input query.
 	 */
 	<T> Page<T> startScroll(long scrollTimeInMillis, CriteriaQuery criteriaQuery, Class<T> clazz, SearchResultMapper mapper);
 
 
-	<T> Page<T> continueScroll(@Nullable String scrollId, long scrollTimeInMillis, Class<T> clazz);
-	<T> Page<T> continueScroll(@Nullable String scrollId, long scrollTimeInMillis, Class<T> clazz, SearchResultMapper mapper);
+	<T> Page<T> continueScroll(String scrollId, long scrollTimeInMillis, Class<T> clazz);
+	<T> Page<T> continueScroll(String scrollId, long scrollTimeInMillis, Class<T> clazz, SearchResultMapper mapper);
 	/**
 	 * Clears the search contexts associated with specified scroll ids.
 	 *
@@ -567,7 +561,7 @@ public interface ElasticsearchOperations {
 	 * @param indexName
 	 * @return
 	 */
-	List<AliasMetaData> queryForAlias(String indexName);
+	List<Map> queryForAlias(String indexName);
 
 
 	<T> T query(SearchQuery query, ResultsExtractor<T> resultsExtractor);

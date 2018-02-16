@@ -17,10 +17,9 @@ package org.springframework.data.elasticsearch.core.query;
 
 import java.util.Map;
 
-import org.elasticsearch.index.query.QueryBuilder;
-
 /**
  * @author Mohsin Husen
+ * @author Artur Konczak
  */
 public class AliasBuilder {
 

@@ -15,14 +15,15 @@
  */
 package org.springframework.data.elasticsearch.core.query;
 
-import static java.util.Collections.addAll;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import org.elasticsearch.action.search.SearchType;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.util.Assert;
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+
+import static java.util.Collections.addAll;
 
 /**
  * AbstractQuery
@@ -42,7 +43,7 @@ abstract class AbstractQuery implements Query {
 	protected float minScore;
 	protected Collection<String> ids;
 	protected String route;
-	protected SearchType searchType = SearchType.DFS_QUERY_THEN_FETCH;
+	protected SearchType searchType = SearchType.dfsQueryThenFetch;
 
 	@Override
 	public Sort getSort() {
@@ -56,9 +57,9 @@ abstract class AbstractQuery implements Query {
 
 	@Override
 	public final <T extends Query> T setPageable(Pageable pageable) {
-		
+
 		Assert.notNull(pageable, "Pageable must not be null!");
-		
+
 		this.pageable = pageable;
 		return (T) this.addSort(pageable.getSort());
 	}

@@ -20,13 +20,13 @@ import static org.junit.Assert.*;
 
 import java.util.List;
 
-import org.elasticsearch.index.query.QueryBuilders;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.elasticsearch.core.ElasticsearchTemplate;
 import org.springframework.data.elasticsearch.core.query.NativeSearchQueryBuilder;
+import org.springframework.data.elasticsearch.core.query.QueryBuilder;
 import org.springframework.data.elasticsearch.entities.SynonymEntity;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
@@ -70,7 +70,7 @@ public class SynonymRepositoryTests {
 		//then
 		assertThat(repository.count(),is(2L));
 
-		List<SynonymEntity> synonymEntities = elasticsearchTemplate.queryForList(new NativeSearchQueryBuilder().withQuery(QueryBuilders.termQuery("text", "british")).build(), SynonymEntity.class);
+		List<SynonymEntity> synonymEntities = elasticsearchTemplate.queryForList(new NativeSearchQueryBuilder().withQuery(QueryBuilder.termQuery("text", "british")).build(), SynonymEntity.class);
 		assertThat(synonymEntities.size(), is(1));
 	}
 

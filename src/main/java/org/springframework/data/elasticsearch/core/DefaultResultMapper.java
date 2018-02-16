@@ -24,18 +24,11 @@ import java.util.LinkedList;
 import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
-import org.elasticsearch.action.get.GetResponse;
-import org.elasticsearch.action.get.MultiGetItemResponse;
-import org.elasticsearch.action.get.MultiGetResponse;
-import org.elasticsearch.action.search.SearchResponse;
-import org.elasticsearch.search.SearchHit;
-import org.elasticsearch.search.SearchHitField;
+import org.elasticsearch.client.Response;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.elasticsearch.ElasticsearchException;
 import org.springframework.data.elasticsearch.annotations.Document;
 import org.springframework.data.elasticsearch.annotations.ScriptedField;
-import org.springframework.data.elasticsearch.core.aggregation.AggregatedPage;
-import org.springframework.data.elasticsearch.core.aggregation.impl.AggregatedPageImpl;
 import org.springframework.data.elasticsearch.core.mapping.ElasticsearchPersistentEntity;
 import org.springframework.data.elasticsearch.core.mapping.ElasticsearchPersistentProperty;
 import org.springframework.data.mapping.context.MappingContext;
@@ -76,8 +69,8 @@ public class DefaultResultMapper extends AbstractResultMapper {
 	}
 
 	@Override
-	public <T> AggregatedPage<T> mapResults(SearchResponse response, Class<T> clazz, Pageable pageable) {
-		long totalHits = response.getHits().totalHits();
+	public <T> ScrolledPage<T> mapResults(Response response, Class<T> clazz, Pageable pageable) {
+/*		long totalHits = response.getHits().totalHits();
 		List<T> results = new ArrayList<>();
 		for (SearchHit hit : response.getHits()) {
 			if (hit != null) {
@@ -93,10 +86,11 @@ public class DefaultResultMapper extends AbstractResultMapper {
 			}
 		}
 
-        return new AggregatedPageImpl<T>(results, pageable, totalHits, response.getAggregations(), response.getScrollId());
+        return new AggregatedPageImpl<T>(results, pageable, totalHits, response.getAggregations(), response.getScrollId());*/
+		return null;
 	}
 
-	private <T> void populateScriptFields(T result, SearchHit hit) {
+/*	private <T> void populateScriptFields(T result, SearchHit hit) {
 		if (hit.getFields() != null && !hit.getFields().isEmpty() && result != null) {
 			for (java.lang.reflect.Field field : result.getClass().getDeclaredFields()) {
 				ScriptedField scriptedField = field.getAnnotation(ScriptedField.class);
@@ -146,42 +140,44 @@ public class DefaultResultMapper extends AbstractResultMapper {
 		} catch (IOException e) {
 			return null;
 		}
-	}
+	}*/
 
 	@Override
-	public <T> T mapResult(GetResponse response, Class<T> clazz) {
-		T result = mapEntity(response.getSourceAsString(), clazz);
+	public <T> T mapResult(Response response, Class<T> clazz) {
+/*		T result = mapEntity(response.getSourceAsString(), clazz);
 		if (result != null) {
 			setPersistentEntityId(result, response.getId(), clazz);
 		}
-		return result;
+		return result;*/
+		return null;
 	}
 
 	@Override
-	public <T> LinkedList<T> mapResults(MultiGetResponse responses, Class<T> clazz) {
-		LinkedList<T> list = new LinkedList<>();
-		for (MultiGetItemResponse response : responses.getResponses()) {
-			if (!response.isFailed() && response.getResponse().isExists()) {
-				T result = mapEntity(response.getResponse().getSourceAsString(), clazz);
-				setPersistentEntityId(result, response.getResponse().getId(), clazz);
-				list.add(result);
-			}
-		}
-		return list;
+	public <T> LinkedList<T> mapResults(Response responses, Class<T> clazz) {
+//		LinkedList<T> list = new LinkedList<>();
+//		for (MultiGetItemResponse response : responses.getResponses()) {
+//			if (!response.isFailed() && response.getResponse().isExists()) {
+//				T result = mapEntity(response.getResponse().getSourceAsString(), clazz);
+//				setPersistentEntityId(result, response.getResponse().getId(), clazz);
+//				list.add(result);
+//			}
+//		}
+//		return list;
+		return null;
 	}
 
-	private <T> void setPersistentEntityId(T result, String id, Class<T> clazz) {
-
-		if (mappingContext != null && clazz.isAnnotationPresent(Document.class)) {
-
-			ElasticsearchPersistentEntity<?> persistentEntity = mappingContext.getRequiredPersistentEntity(clazz);
-			ElasticsearchPersistentProperty idProperty = persistentEntity.getIdProperty();
-
-			// Only deal with String because ES generated Ids are strings !
-			if (idProperty != null && idProperty.getType().isAssignableFrom(String.class)) {
-				persistentEntity.getPropertyAccessor(result).setProperty(idProperty, id);
-			}
-
-		}
-	}
+//	private <T> void setPersistentEntityId(T result, String id, Class<T> clazz) {
+//
+//		if (mappingContext != null && clazz.isAnnotationPresent(Document.class)) {
+//
+//			ElasticsearchPersistentEntity<?> persistentEntity = mappingContext.getRequiredPersistentEntity(clazz);
+//			ElasticsearchPersistentProperty idProperty = persistentEntity.getIdProperty();
+//
+//			// Only deal with String because ES generated Ids are strings !
+//			if (idProperty != null && idProperty.getType().isAssignableFrom(String.class)) {
+//				persistentEntity.getPropertyAccessor(result).setProperty(idProperty, id);
+//			}
+//
+//		}
+//	}
 }

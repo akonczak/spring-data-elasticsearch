@@ -19,13 +19,7 @@ import static org.springframework.util.CollectionUtils.isEmpty;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import org.elasticsearch.action.search.SearchType;
-import org.elasticsearch.index.query.QueryBuilder;
-import org.elasticsearch.search.aggregations.AbstractAggregationBuilder;
-import org.elasticsearch.search.fetch.subphase.highlight.HighlightBuilder;
-import org.elasticsearch.search.sort.SortBuilder;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.elasticsearch.core.facet.FacetRequest;
 
 /**
  * NativeSearchQuery
@@ -41,9 +35,6 @@ public class NativeSearchQueryBuilder {
 	private QueryBuilder filterBuilder;
     private List<ScriptField> scriptFields = new ArrayList<>();
 	private List<SortBuilder> sortBuilders = new ArrayList<>();
-	private List<FacetRequest> facetRequests = new ArrayList<>();
-	private List<AbstractAggregationBuilder> aggregationBuilders = new ArrayList<>();
-	private HighlightBuilder.Field[] highlightFields;
 	private Pageable pageable = Pageable.unpaged();
 	private String[] indices;
 	private String[] types;
@@ -53,7 +44,7 @@ public class NativeSearchQueryBuilder {
 	private float minScore;
 	private Collection<String> ids;
 	private String route;
-	private SearchType searchType;
+	private Query.SearchType searchType;
 
 	public NativeSearchQueryBuilder withQuery(QueryBuilder queryBuilder) {
 		this.queryBuilder = queryBuilder;
@@ -74,21 +65,6 @@ public class NativeSearchQueryBuilder {
         this.scriptFields.add(scriptField);
         return this;
     }
-
-	public NativeSearchQueryBuilder addAggregation(AbstractAggregationBuilder aggregationBuilder) {
-		this.aggregationBuilders.add(aggregationBuilder);
-		return this;
-	}
-
-	public NativeSearchQueryBuilder withFacet(FacetRequest facetRequest) {
-		facetRequests.add(facetRequest);
-		return this;
-	}
-
-	public NativeSearchQueryBuilder withHighlightFields(HighlightBuilder.Field... highlightFields) {
-		this.highlightFields = highlightFields;
-		return this;
-	}
 
 	public NativeSearchQueryBuilder withIndicesBoost(List<IndexBoost> indicesBoost) {
 		this.indicesBoost = indicesBoost;
@@ -135,13 +111,13 @@ public class NativeSearchQueryBuilder {
 		return this;
 	}
 
-	public NativeSearchQueryBuilder withSearchType(SearchType searchType) {
+	public NativeSearchQueryBuilder withSearchType(Query.SearchType searchType) {
 		this.searchType = searchType;
 		return this;
 	}
 
 	public NativeSearchQuery build() {
-		NativeSearchQuery nativeSearchQuery = new NativeSearchQuery(queryBuilder, filterBuilder, sortBuilders, highlightFields);
+		NativeSearchQuery nativeSearchQuery = new NativeSearchQuery(queryBuilder, filterBuilder, sortBuilders);
 		nativeSearchQuery.setPageable(pageable);
 
 		if (indices != null) {
@@ -167,14 +143,6 @@ public class NativeSearchQueryBuilder {
         if (!isEmpty(scriptFields)) {
             nativeSearchQuery.setScriptFields(scriptFields);
         }
-
-		if (!isEmpty(facetRequests)) {
-			nativeSearchQuery.setFacets(facetRequests);
-		}
-
-		if (!isEmpty(aggregationBuilders)) {
-			nativeSearchQuery.setAggregations(aggregationBuilders);
-		}
 
 		if (minScore > 0) {
 			nativeSearchQuery.setMinScore(minScore);

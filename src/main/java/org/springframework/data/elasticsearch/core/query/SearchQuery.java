@@ -17,12 +17,6 @@ package org.springframework.data.elasticsearch.core.query;
 
 import java.util.List;
 
-import org.elasticsearch.index.query.QueryBuilder;
-import org.elasticsearch.search.aggregations.AbstractAggregationBuilder;
-import org.elasticsearch.search.fetch.subphase.highlight.HighlightBuilder;
-import org.elasticsearch.search.sort.SortBuilder;
-import org.springframework.data.elasticsearch.core.facet.FacetRequest;
-
 /**
  * NativeSearchQuery
  *
@@ -32,20 +26,13 @@ import org.springframework.data.elasticsearch.core.facet.FacetRequest;
  */
 public interface SearchQuery extends Query {
 
-	QueryBuilder getQuery();
+    QueryBuilder getQuery();
 
-	QueryBuilder getFilter();
+    QueryBuilder getFilter();
 
-	List<SortBuilder> getElasticsearchSorts();
+    List<SortBuilder> getElasticsearchSorts();
 
-	@Deprecated
-	List<FacetRequest> getFacets();
-
-	List<AbstractAggregationBuilder> getAggregations();
-
-	HighlightBuilder.Field[] getHighlightFields();
-
-	List<IndexBoost> getIndicesBoost();
+    List<IndexBoost> getIndicesBoost();
 
     List<ScriptField> getScriptFields();
 
