@@ -5,7 +5,7 @@ set -e
 ES_VERSION="5.6.7"
 CONTAINER_NAME="elastic-${ES_VERSION}"
 
-HOST_PORT_SUFFIX="50"
+HOST_PORT_SUFFIX="00"
 HTTP_PORT="92${HOST_PORT_SUFFIX}"
 TRANSPORT_PORT="93${HOST_PORT_SUFFIX}"
 
@@ -28,4 +28,4 @@ if [ -n "${IMAGE}" ]; then
 fi
 
 
-docker run --name ${CONTAINER_NAME} -p ${HTTP_PORT}:9200 -p ${TRANSPORT_PORT}:9300 -e "xpack.security.enabled=false" -e "discovery.type=single-node" docker.elastic.co/elasticsearch/elasticsearch:${ES_VERSION}
+docker run -d --name ${CONTAINER_NAME} -p ${HTTP_PORT}:9200 -p ${TRANSPORT_PORT}:9300 -e "xpack.security.enabled=false" -e "discovery.type=single-node" docker.elastic.co/elasticsearch/elasticsearch:${ES_VERSION}

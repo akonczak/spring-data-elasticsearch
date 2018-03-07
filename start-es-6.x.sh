@@ -28,4 +28,4 @@ if [ -n "${IMAGE}" ]; then
 fi
 
 
-docker run --name ${CONTAINER_NAME} -p ${HTTP_PORT}:9200 -p ${TRANSPORT_PORT}:9300 -e "xpack.security.enabled=false" -e "discovery.type=single-node" docker.elastic.co/elasticsearch/elasticsearch:${ES_VERSION}
+docker run -d --name ${CONTAINER_NAME} -p ${HTTP_PORT}:9200 -p ${TRANSPORT_PORT}:9300 -e "xpack.security.enabled=false" -e "discovery.type=single-node" docker.elastic.co/elasticsearch/elasticsearch:${ES_VERSION}

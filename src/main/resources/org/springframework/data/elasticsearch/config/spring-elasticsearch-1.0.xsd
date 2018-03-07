@@ -36,67 +36,11 @@
         <xsd:union memberTypes="xsd:string"/>
     </xsd:simpleType>
 
-    <xsd:element name="node-client">
+    <xsd:element name="rest-client">
         <xsd:annotation>
             <xsd:documentation/>
             <xsd:appinfo>
-                <tool:assignable-to type="org.elasticsearch.client.Client"/>
-            </xsd:appinfo>
-        </xsd:annotation>
-        <xsd:complexType>
-            <xsd:complexContent>
-                <xsd:extension base="beans:identifiedType">
-                    <xsd:attribute name="local" type="xsd:boolean" default="false">
-                        <xsd:annotation>
-                            <xsd:documentation>
-                                <![CDATA[local here means local on the JVM (well, actually class loader) level, meaning that two local servers started within the same JVM will discover themselves and form a cluster]]>
-                            </xsd:documentation>
-                        </xsd:annotation>
-                    </xsd:attribute>
-                    <xsd:attribute name="cluster-name" type="xsd:string" default="elasticsearch">
-                        <xsd:annotation>
-                            <xsd:documentation>
-                                <![CDATA[Name of the cluster in which this instance of node client will connect to]]>
-                            </xsd:documentation>
-                        </xsd:annotation>
-                    </xsd:attribute>
-                    <xsd:attribute name="http-enabled" type="xsd:boolean" default="true">
-                        <xsd:annotation>
-                            <xsd:documentation>
-                                <![CDATA[ to enable or disable http port ]]>
-                            </xsd:documentation>
-                        </xsd:annotation>
-                    </xsd:attribute>
-                    <xsd:attribute name="path-data" type="xsd:string" default="">
-                        <xsd:annotation>
-                            <xsd:documentation>
-                                <![CDATA[ path to the data folder for node client ]]>
-                            </xsd:documentation>
-                        </xsd:annotation>
-                    </xsd:attribute>
-                    <xsd:attribute name="path-home" type="xsd:string" default="">
-                        <xsd:annotation>
-                            <xsd:documentation>
-                                <![CDATA[ path to the home folder for node client ]]>
-                            </xsd:documentation>
-                        </xsd:annotation>
-                    </xsd:attribute>
-                    <xsd:attribute name="path-configuration" type="xsd:string" default="">
-                        <xsd:annotation>
-                            <xsd:documentation>
-                                <![CDATA[ path to configuration file for node client ]]>
-                            </xsd:documentation>
-                        </xsd:annotation>
-                    </xsd:attribute>
-                </xsd:extension>
-            </xsd:complexContent>
-        </xsd:complexType>
-    </xsd:element>
-    <xsd:element name="transport-client">
-        <xsd:annotation>
-            <xsd:documentation/>
-            <xsd:appinfo>
-                <tool:assignable-to type="org.elasticsearch.client.Client"/>
+                <tool:assignable-to type="org.elasticsearch.client.RestClient"/>
             </xsd:appinfo>
         </xsd:annotation>
         <xsd:complexType>

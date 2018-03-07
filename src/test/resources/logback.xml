@@ -7,6 +7,8 @@
         </encoder>
     </appender>
 
+    <logger name="org.elasticsearch.client" level="all"/>
+
     <root level="error">
         <appender-ref ref="console"/>
     </root>

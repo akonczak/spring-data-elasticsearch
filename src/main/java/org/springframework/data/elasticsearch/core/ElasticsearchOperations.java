@@ -16,8 +16,9 @@
 package org.springframework.data.elasticsearch.core;
 
 import org.elasticsearch.client.Response;
-import org.elasticsearch.client.RestClient;
 import org.springframework.data.domain.Page;
+import org.springframework.data.elasticsearch.client.Client;
+import org.springframework.data.elasticsearch.client.model.Settings;
 import org.springframework.data.elasticsearch.core.convert.ElasticsearchConverter;
 import org.springframework.data.elasticsearch.core.mapping.ElasticsearchPersistentEntity;
 import org.springframework.data.elasticsearch.core.query.*;
@@ -33,6 +34,7 @@ import java.util.Map;
  * @author Rizwan Idrees
  * @author Mohsin Husen
  * @author Kevin Leturc
+ * @author Artur Konczak
  */
 public interface ElasticsearchOperations {
 
@@ -44,7 +46,7 @@ public interface ElasticsearchOperations {
 	/**
 	 * @return elasticsearch client
 	 */
-	RestClient getClient();
+	Client getClient();
 
 	/**
 	 * Create an index for a class
@@ -67,7 +69,8 @@ public interface ElasticsearchOperations {
 	 * @param indexName
 	 * @param settings
 	 */
-	boolean createIndex(String indexName, Object settings);
+	boolean createIndex(String indexName, String settings);
+	boolean createIndex(String indexName, Settings settings);
 
 	/**
 	 * Create an index for given class and Settings
@@ -75,7 +78,8 @@ public interface ElasticsearchOperations {
 	 * @param clazz
 	 * @param settings
 	 */
-	<T> boolean createIndex(Class<T> clazz, Object settings);
+	<T> boolean createIndex(Class<T> clazz, String settings);
+	<T> boolean createIndex(Class<T> clazz, Settings settings);
 
 	/**
 	 * Create mapping for a class
@@ -377,14 +381,16 @@ public interface ElasticsearchOperations {
 	 */
 	void bulkUpdate(List<UpdateQuery> queries);
 
+	String delete(String indexName, String id);
 	/**
 	 * Delete the one object with provided id
-	 *
+	 * https://www.elastic.co/guide/en/elasticsearch/reference/6.x/removal-of-types.html
 	 * @param indexName
 	 * @param type
 	 * @param id
 	 * @return documentId of the document deleted
 	 */
+	@Deprecated
 	String delete(String indexName, String type, String id);
 
 
@@ -392,6 +398,7 @@ public interface ElasticsearchOperations {
 	 * Delete all records matching the criteria
 	 *
 	 * @param clazz
+	 * @param criteriaQuery
 	 * @param criteriaQuery
 	 */
 	<T> void delete(CriteriaQuery criteriaQuery, Class<T> clazz);

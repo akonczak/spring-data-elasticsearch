@@ -1,0 +1,32 @@
+{
+  "twitter" : {
+    "aliases" : {
+      "alias1" : { },
+      "alias2" : { }
+    },
+    "mappings" : {
+      "_doc" : {
+        "properties" : {
+          "field1" : {
+            "type" : "text"
+          },
+          "field2" : {
+            "type" : "date"
+          }
+        }
+      }
+    },
+    "settings" : {
+      "index" : {
+        "creation_date" : "1519841856687",
+        "number_of_shards" : "1",
+        "number_of_replicas" : "1",
+        "uuid" : "qNDLKPceRgyu6O8iE4xvwA",
+        "version" : {
+          "created" : "6020199"
+        },
+        "provided_name" : "twitter"
+      }
+    }
+  }
+}

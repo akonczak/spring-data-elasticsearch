@@ -1,0 +1,17 @@
+{
+  "error" : {
+    "root_cause" : [
+      {
+        "type" : "resource_already_exists_exception",
+        "reason" : "index [twitter/WJ3sDhQ-RqOtlgXmd5jdJQ] already exists",
+        "index_uuid" : "WJ3sDhQ-RqOtlgXmd5jdJQ",
+        "index" : "twitter"
+      }
+    ],
+    "type" : "resource_already_exists_exception",
+    "reason" : "index [twitter/WJ3sDhQ-RqOtlgXmd5jdJQ] already exists",
+    "index_uuid" : "WJ3sDhQ-RqOtlgXmd5jdJQ",
+    "index" : "twitter"
+  },
+  "status" : 400
+}

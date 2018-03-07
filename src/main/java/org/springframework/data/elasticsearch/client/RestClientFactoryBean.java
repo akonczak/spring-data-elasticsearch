@@ -15,20 +15,17 @@
  */
 package org.springframework.data.elasticsearch.client;
 
-import org.apache.http.HttpHost;
 import org.elasticsearch.client.RestClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.DisposableBean;
 import org.springframework.beans.factory.FactoryBean;
 import org.springframework.beans.factory.InitializingBean;
-import org.springframework.util.Assert;
+import org.springframework.data.elasticsearch.client.rest.ClientImpl;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Properties;
 
-import static org.apache.commons.lang.StringUtils.*;
+import static org.apache.commons.lang.StringUtils.split;
 
 /**
  * RestClientFactoryBean
@@ -36,18 +33,20 @@ import static org.apache.commons.lang.StringUtils.*;
  * @author Artur Konczak
  */
 
-public class RestClientFactoryBean implements FactoryBean<RestClient>, InitializingBean, DisposableBean {
+public class RestClientFactoryBean implements FactoryBean<Client>, InitializingBean, DisposableBean {
 
     private static final Logger logger = LoggerFactory.getLogger(RestClientFactoryBean.class);
-    private RestClient client;
+    private Client client;
 
     private String clusterNodes = "127.0.0.1:9200";
-    private Properties properties;
-    static final String COLON = ":";
     static final String COMMA = ",";
+    private Properties properties;
 
     @Override
-    public RestClient getObject() throws Exception {
+    public Client getObject() throws Exception {
+        if (client == null) {
+            afterPropertiesSet();
+        }
         return client;
     }
 
@@ -79,19 +78,7 @@ public class RestClientFactoryBean implements FactoryBean<RestClient>, Initializ
     }
 
     protected void buildClient() throws Exception {
-        List<HttpHost> nodes = new ArrayList<>();
-        for (String clusterNode : split(clusterNodes, COMMA)) {
-            String hostName = substringBeforeLast(clusterNode, COLON);
-            String port = substringAfterLast(clusterNode, COLON);
-
-            Assert.hasText(hostName, "[Assertion failed] missing host name in 'clusterNodes'");
-            Assert.hasText(port, "[Assertion failed] missing port in 'clusterNodes'");
-
-            logger.info("adding cluster node : " + clusterNode);
-            nodes.add(new HttpHost(hostName, Integer.parseInt(port), "http"));
-        }
-
-        client = RestClient.builder(nodes.toArray(new HttpHost[nodes.size()])).build();
+        client = new ClientImpl(split(clusterNodes, COMMA));
     }
 
     public void setClusterNodes(String clusterNodes) {

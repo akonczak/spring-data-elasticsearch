@@ -16,11 +16,11 @@
 package org.springframework.data.elasticsearch;
 
 import java.util.UUID;
-import org.elasticsearch.client.Client;
-import org.elasticsearch.common.settings.Settings;
-import org.elasticsearch.node.NodeValidationException;
-import org.elasticsearch.transport.Netty4Plugin;
-import org.springframework.data.elasticsearch.client.NodeClientFactoryBean;
+//import org.elasticsearch.client.Client;
+//import org.elasticsearch.common.settings.Settings;
+//import org.elasticsearch.node.NodeValidationException;
+//import org.elasticsearch.transport.Netty4Plugin;
+//import org.springframework.data.elasticsearch.client.NodeClientFactoryBean;
 import static java.util.Arrays.*;
 
 /**
@@ -29,7 +29,7 @@ import static java.util.Arrays.*;
  */
 public class Utils {
 
-	public static Client getNodeClient() throws NodeValidationException {
+/*	public static Client getNodeClient() throws NodeValidationException {
 
 		String pathHome = "src/test/resources/test-home-dir";
 		String pathData = "target/elasticsearchTestData";
@@ -46,5 +46,5 @@ public class Utils {
 						.put("node.max_local_storage_nodes", 100)
 						.put("script.inline", "true")
 						.build(), asList(Netty4Plugin.class)).start().client();
-	}
+	}*/
 }

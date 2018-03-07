@@ -25,6 +25,7 @@ import org.springframework.data.repository.config.RepositoryConfigurationExtensi
  *
  * @author Rizwan Idrees
  * @author Mohsin Husen
+ * @author Artur Konczak
  */
 
 public class ElasticsearchNamespaceHandler extends NamespaceHandlerSupport {
@@ -33,7 +34,6 @@ public class ElasticsearchNamespaceHandler extends NamespaceHandlerSupport {
 	public void init() {
 		RepositoryConfigurationExtension extension = new ElasticsearchRepositoryConfigExtension();
 		RepositoryBeanDefinitionParser parser = new RepositoryBeanDefinitionParser(extension);
-
 		registerBeanDefinitionParser("repositories", parser);
 		registerBeanDefinitionParser("rest-client", new RestClientBeanDefinitionParser());
 	}

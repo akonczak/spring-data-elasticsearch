@@ -17,6 +17,7 @@ package org.springframework.data.elasticsearch.repository.support;
 
 import static org.springframework.data.elasticsearch.core.query.QueryBuilder.matchAllQuery;
 
+import java.io.IOException;
 import java.io.Serializable;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
@@ -80,12 +81,12 @@ public abstract class AbstractElasticsearchRepository<T, ID extends Serializable
 				createIndex();
 				putMapping();
 			}
-		} catch (ElasticsearchException exception) {
-			LOGGER.error("failed to load elasticsearch nodes : " + exception.getDetailedMessage());
+		} catch (Exception exception) {
+			LOGGER.error("failed to load elasticsearch nodes : " + exception.getMessage());
 		}
 	}
 
-	private void createIndex() {
+	private void createIndex() throws IOException {
 		elasticsearchOperations.createIndex(getEntityClass());
 	}
 
