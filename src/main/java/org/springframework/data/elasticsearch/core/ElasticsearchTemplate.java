@@ -40,14 +40,13 @@ import org.springframework.data.elasticsearch.core.mapping.SimpleElasticsearchMa
 import org.springframework.data.elasticsearch.core.query.*;
 import org.springframework.data.util.CloseableIterator;
 import org.springframework.util.Assert;
-import org.springframework.util.StringUtils;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.*;
 
-import static org.springframework.data.elasticsearch.client.IndexAPI.DEFAULT_INDEX_TYPE_NAME;
+import static org.springframework.data.elasticsearch.client.IndicesAPI.DEFAULT_INDEX_TYPE_NAME;
 import static org.springframework.util.StringUtils.hasText;
 
 /**
@@ -124,7 +123,7 @@ public class ElasticsearchTemplate implements ElasticsearchOperations, Applicati
     @Override
     public boolean createIndex(String indexName){
         Assert.notNull(indexName, "Missing index name for operation create");
-        return client.getIndexAPI().create(indexName, (String)null, (String)null);
+        return client.getIndicesAPI().create(indexName, (String)null, (String)null);
     }
 
     @Override
@@ -167,11 +166,11 @@ public class ElasticsearchTemplate implements ElasticsearchOperations, Applicati
 
     @Override
     public boolean putMapping(String indexName, String type, Mappings mapping) {
-        return client.getIndexAPI().addMappings(indexName, mapping);
+        return client.getIndicesAPI().addMappings(indexName, mapping);
     }
     @Override
     public boolean putMapping(String indexName, String type, String mapping) {
-        return client.getIndexAPI().addMappings(indexName, mapping);
+        return client.getIndicesAPI().addMappings(indexName, mapping);
     }
 
     @Override
@@ -188,7 +187,7 @@ public class ElasticsearchTemplate implements ElasticsearchOperations, Applicati
 
     @Override
     public Map<String,Mappings> getMapping(String indexName){
-        return client.getIndexAPI().getIndex(indexName).getMappings();
+        return client.getIndicesAPI().getIndex(indexName).getMappings();
     }
 
     @Override
@@ -516,19 +515,46 @@ public class ElasticsearchTemplate implements ElasticsearchOperations, Applicati
 
     @Override
     public String index(IndexQuery query) {
-//		String documentId = prepareIndex(query).execute().actionGet().getId();
-//		// We should call this because we are not going through a mapper.
-//		if (query.getObject() != null) {
-//			setPersistentEntityId(query.getObject(), documentId);
-//		}
-//		return documentId;
-        return null;
+        try {
+        String indexName = hasText(query.getIndexName()) ? query.getIndexName():
+            retrieveIndexNameFromPersistentEntity(query.getObject().getClass())[0] ;
+
+            if (query.getVersion() != null) {
+                throw  new UnsupportedOperationException("Version are not supported now !!!");
+                //				indexRequestBuilder.setVersion(query.getVersion());
+                //				indexRequestBuilder.setVersionType(EXTERNAL);
+            }
+
+            if (query.getObject() != null) {
+                String id = hasText(query.getId()) ?  query.getId(): getPersistentEntityId(query.getObject()) ;
+                String json = client.getMapper().toJson(query.getObject());
+                // If we have a query id and a document id, do not ask ES to generate one.
+                String documentId = null;
+                if (hasText(id)) {
+                    documentId = client.getDocumentAPI().index(indexName, id, json);
+                } else {
+                    documentId = client.getDocumentAPI().index(indexName, json);
+                }
+
+                setPersistentEntityId(query.getObject(), documentId);
+                return documentId;
+
+            } else if (query.getSource() != null) {
+                return client.getDocumentAPI().index(indexName, query.getId(), query.getSource());
+            } else {
+                throw new ElasticsearchException(
+                        "object or source is null, failed to index the document [id: " + query.getId() + "]");
+            }
+
+        } catch (IOException e) {
+			throw new ElasticsearchException("failed to index the document [id: " + query.getId() + "]", e);
+		}
+
     }
 
     @Override
     public Response update(UpdateQuery query) {
-		/*return this.prepareUpdate(query).execute().actionGet();*/
-        return null;
+        throw new UnsupportedOperationException("Document update not supported in this version !!!");
     }
 
 /*	private UpdateRequestBuilder prepareUpdate(UpdateQuery query) {
@@ -597,7 +623,7 @@ public class ElasticsearchTemplate implements ElasticsearchOperations, Applicati
 
     @Override
     public boolean indexExists(String indexName) {
-        return client.getIndexAPI().isExists(indexName);
+        return client.getIndicesAPI().isExists(indexName);
     }
 
     @Override
@@ -616,7 +642,7 @@ public class ElasticsearchTemplate implements ElasticsearchOperations, Applicati
     public boolean deleteIndex(String indexName) {
 		Assert.notNull(indexName, "Missing index name for delete operation");
 		if (indexExists(indexName)) {
-			return client.getIndexAPI().delete(indexName);
+			return client.getIndicesAPI().delete(indexName);
 		}
 		return false;
     }
@@ -919,7 +945,7 @@ public class ElasticsearchTemplate implements ElasticsearchOperations, Applicati
     }
     @Override
     public boolean createIndex(String indexName, Settings settings) {
-		return client.getIndexAPI().create(indexName, settings, null);
+		return client.getIndicesAPI().create(indexName, settings, null);
     }
 
     public <T> boolean createIndex(Class<T> clazz, String settings) {
@@ -952,10 +978,10 @@ public class ElasticsearchTemplate implements ElasticsearchOperations, Applicati
 
     @Override
     public Map getSetting(String indexName) {
+        throw new UnsupportedOperationException("method need implementation !!!");
 /*		Assert.notNull(indexName, "No index defined for getSettings");
 		return client.admin().indices().getSettings(new GetSettingsRequest()).actionGet().getIndexToSettings()
 				.get(indexName).getAsMap();*/
-        return null;
     }
 
 /*	private <T> SearchRequestBuilder prepareSearch(Query query, Class<T> clazz) {
@@ -999,44 +1025,44 @@ public class ElasticsearchTemplate implements ElasticsearchOperations, Applicati
 		return searchRequestBuilder;
 	}
     */
-	private IndexRequestBuilder prepareIndex(IndexQuery query) {
-		try {
-			String indexName = isBlank(query.getIndexName())
-					? retrieveIndexNameFromPersistentEntity(query.getObject().getClass())[0] : query.getIndexName();
-			String type = isBlank(query.getType()) ? retrieveTypeFromPersistentEntity(query.getObject().getClass())[0]
-					: query.getType();
-
-			IndexRequestBuilder indexRequestBuilder = null;
-
-			if (query.getObject() != null) {
-				String id = isBlank(query.getId()) ? getPersistentEntityId(query.getObject()) : query.getId();
-				// If we have a query id and a document id, do not ask ES to generate one.
-				if (id != null) {
-					indexRequestBuilder = client.prepareIndex(indexName, type, id);
-				} else {
-					indexRequestBuilder = client.prepareIndex(indexName, type);
-				}
-				indexRequestBuilder.setSource(resultsMapper.getEntityMapper().mapToString(query.getObject()));
-			} else if (query.getSource() != null) {
-				indexRequestBuilder = client.prepareIndex(indexName, type, query.getId()).setSource(query.getSource());
-			} else {
-				throw new ElasticsearchException(
-						"object or source is null, failed to index the document [id: " + query.getId() + "]");
-			}
-			if (query.getVersion() != null) {
-				indexRequestBuilder.setVersion(query.getVersion());
-				indexRequestBuilder.setVersionType(EXTERNAL);
-			}
-
-			if (query.getParentId() != null) {
-				indexRequestBuilder.setParent(query.getParentId());
-			}
-
-			return indexRequestBuilder;
-		} catch (IOException e) {
-			throw new ElasticsearchException("failed to index the document [id: " + query.getId() + "]", e);
-		}
-	}
+//	private IndexRequestBuilder prepareIndex(IndexQuery query) {
+//		try {
+//			String indexName = isBlank(query.getIndexName())
+//					? retrieveIndexNameFromPersistentEntity(query.getObject().getClass())[0] : query.getIndexName();
+//			String type = isBlank(query.getType()) ? retrieveTypeFromPersistentEntity(query.getObject().getClass())[0]
+//					: query.getType();
+//
+//			IndexRequestBuilder indexRequestBuilder = null;
+//
+//			if (query.getObject() != null) {
+//				String id = isBlank(query.getId()) ? getPersistentEntityId(query.getObject()) : query.getId();
+//				// If we have a query id and a document id, do not ask ES to generate one.
+//				if (id != null) {
+//					indexRequestBuilder = client.prepareIndex(indexName, type, id);
+//				} else {
+//					indexRequestBuilder = client.prepareIndex(indexName, type);
+//				}
+//				indexRequestBuilder.setSource(resultsMapper.getEntityMapper().mapToString(query.getObject()));
+//			} else if (query.getSource() != null) {
+//				indexRequestBuilder = client.prepareIndex(indexName, type, query.getId()).setSource(query.getSource());
+//			} else {
+//				throw new ElasticsearchException(
+//						"object or source is null, failed to index the document [id: " + query.getId() + "]");
+//			}
+//			if (query.getVersion() != null) {
+//				indexRequestBuilder.setVersion(query.getVersion());
+//				indexRequestBuilder.setVersionType(EXTERNAL);
+//			}
+//
+//			if (query.getParentId() != null) {
+//				indexRequestBuilder.setParent(query.getParentId());
+//			}
+//
+//			return indexRequestBuilder;
+//		} catch (IOException e) {
+//			throw new ElasticsearchException("failed to index the document [id: " + query.getId() + "]", e);
+//		}
+//	}
 
     @Override
     public void refresh(String indexName) {

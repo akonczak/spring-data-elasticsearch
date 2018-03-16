@@ -3,14 +3,14 @@
     "root_cause" : [
       {
         "type" : "resource_already_exists_exception",
-        "reason" : "index [twitter/WJ3sDhQ-RqOtlgXmd5jdJQ] already exists",
-        "index_uuid" : "WJ3sDhQ-RqOtlgXmd5jdJQ",
+        "reason" : "index [twitter/lX1li8j5QUaj6BqgOQNV2A] already exists",
+        "index_uuid" : "lX1li8j5QUaj6BqgOQNV2A",
         "index" : "twitter"
       }
     ],
     "type" : "resource_already_exists_exception",
-    "reason" : "index [twitter/WJ3sDhQ-RqOtlgXmd5jdJQ] already exists",
-    "index_uuid" : "WJ3sDhQ-RqOtlgXmd5jdJQ",
+    "reason" : "index [twitter/lX1li8j5QUaj6BqgOQNV2A] already exists",
+    "index_uuid" : "lX1li8j5QUaj6BqgOQNV2A",
     "index" : "twitter"
   },
   "status" : 400

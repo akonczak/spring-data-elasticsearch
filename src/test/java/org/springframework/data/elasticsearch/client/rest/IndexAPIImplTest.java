@@ -3,7 +3,7 @@ package org.springframework.data.elasticsearch.client.rest;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.data.elasticsearch.client.Client;
-import org.springframework.data.elasticsearch.client.IndexAPI;
+import org.springframework.data.elasticsearch.client.IndicesAPI;
 import org.springframework.data.elasticsearch.client.RestClientFactoryBean;
 import org.springframework.data.elasticsearch.client.model.*;
 
@@ -19,7 +19,7 @@ public class IndexAPIImplTest {
     JsonMapper mapper;
     RestClientFactoryBean factoryBean = new RestClientFactoryBean();
     Client client;
-    IndexAPI  indexAPI;
+    IndicesAPI indexAPI;
 
     final String indexName = "index_api_test";
 
@@ -28,7 +28,7 @@ public class IndexAPIImplTest {
         mapper = new JsonMapperImpl();
         factoryBean.setClusterNodes("localhost:9260");
         client = factoryBean.getObject();
-        indexAPI = client.getIndexAPI();
+        indexAPI = client.getIndicesAPI();
         if (indexAPI.isExists(indexName)) {
             indexAPI.delete(indexName);
         }
@@ -108,7 +108,7 @@ public class IndexAPIImplTest {
                 .build();
         assertThat(indexAPI.create(indexName, new Settings(), mappings), is(true));
         final IndexDescription indexDescription = indexAPI.getIndex(indexName);
-        final Mappings mappingForDefaultType = indexDescription.getMappings().get(IndexAPI.DEFAULT_INDEX_TYPE_NAME);
+        final Mappings mappingForDefaultType = indexDescription.getMappings().get(IndicesAPI.DEFAULT_INDEX_TYPE_NAME);
         final Property nameField = mappingForDefaultType.getProperties().get("name");
         assertThat(nameField.getType(), is("text"));
     }

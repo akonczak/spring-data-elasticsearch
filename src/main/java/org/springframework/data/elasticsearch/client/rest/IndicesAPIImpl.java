@@ -1,7 +1,6 @@
 package org.springframework.data.elasticsearch.client.rest;
 
 import static java.util.Optional.ofNullable;
-import static org.springframework.data.elasticsearch.client.rest.ClientImpl.mapErrors;
 
 import java.io.IOException;
 import java.util.Collections;
@@ -14,19 +13,32 @@ import org.elasticsearch.client.Response;
 import org.elasticsearch.client.RestClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.data.elasticsearch.client.IndexAPI;
+import org.springframework.data.elasticsearch.client.ElasticsearchServerException;
+import org.springframework.data.elasticsearch.client.IndicesAPI;
+import org.springframework.data.elasticsearch.client.ResourceException;
 import org.springframework.data.elasticsearch.client.model.*;
 import org.springframework.lang.Nullable;
 
-public class IndexAPIImpl implements IndexAPI {
+public class IndicesAPIImpl implements IndicesAPI {
 
-	private static final Logger LOG = LoggerFactory.getLogger(IndexAPIImpl.class);
+	private static final Logger LOG = LoggerFactory.getLogger(IndicesAPIImpl.class);
 	private JsonMapper mapper;
 	private RestClient nativeClient;
 
-	public IndexAPIImpl(JsonMapper mapper, RestClient nativeClient) {
+	public IndicesAPIImpl(JsonMapper mapper, RestClient nativeClient) {
 		this.nativeClient = nativeClient;
 		this.mapper = mapper;
+	}
+
+	@Override
+	public boolean create(String indexName) {
+		try {
+			return create(indexName,
+					mapper.toJson(new Settings()),
+					mapper.toJson(new Mappings()));
+		} catch (IOException e) {
+			throw mapErrors(LOG, e);
+		}
 	}
 
 	@Override
@@ -116,6 +128,28 @@ public class IndexAPIImpl implements IndexAPI {
 		} catch (Exception e) {
 			throw mapErrors(LOG, e);
 		}
+	}
+
+	static ResourceException mapErrors(Logger LOG, Exception error) {
+		//TODO ako: test all cases
+		String responseBodyAsString = error.getMessage();
+		if (LOG.isDebugEnabled()) {
+			LOG.debug(responseBodyAsString);
+		}
+		if (responseBodyAsString.contains("index_not_found_exception")) {
+			return new IndexNotFoundException(responseBodyAsString, error);
+		}
+
+		if (responseBodyAsString.contains("resource_already_exists_exception")) {
+			return new IndexAlreadyExistsException(responseBodyAsString, error);
+		}
+
+		if (responseBodyAsString.contains("404")) {
+			LOG.error(responseBodyAsString);
+			return new IndexNotFoundException(responseBodyAsString, error);
+		}
+
+		return new ElasticsearchServerException(responseBodyAsString, error);
 	}
 
 	@Override

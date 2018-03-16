@@ -16,16 +16,16 @@ import java.io.IOException;
 @Service
 public class ClientImpl implements Client, AutoCloseable {
 
-    private IndexAPI indexAPI;
-    private DocumentAPI documentAPI;
-
-    private RestClient nativeClient;
-
     static final String COLON = ":";
 
+    private IndicesAPI indexAPI;
+    private DocumentAPI documentAPI;
+    private RestClient nativeClient;
+    private JsonMapper mapper;
 
     public ClientImpl(JsonMapper mapper, String... hosts) {
 
+        this.mapper = mapper;
         HttpHost[] httpHosts = new HttpHost[hosts.length];
         for (int i = 0; i < hosts.length; i++) {
             String[] parts = hosts[i].split(COLON);
@@ -37,8 +37,8 @@ public class ClientImpl implements Client, AutoCloseable {
 
         nativeClient = RestClient.builder(httpHosts).build();
 
-        indexAPI = new IndexAPIImpl(mapper, nativeClient);
-        documentAPI = new DocumentAPIImpl(mapper, nativeClient);
+        indexAPI = new IndicesAPIImpl(this.mapper, nativeClient);
+        documentAPI = new DocumentAPIImpl(this.mapper, nativeClient);
     }
 
     public ClientImpl(String... hosts) {
@@ -46,7 +46,7 @@ public class ClientImpl implements Client, AutoCloseable {
     }
 
     @Override
-    public IndexAPI getIndexAPI() {
+    public IndicesAPI getIndicesAPI() {
         return indexAPI;
     }
 
@@ -56,29 +56,13 @@ public class ClientImpl implements Client, AutoCloseable {
     }
 
     @Override
+    public JsonMapper getMapper(){
+        return this.mapper;
+    }
+
+    @Override
     public void close() throws IOException {
         nativeClient.close();
     }
 
-    static ResourceException mapErrors(Logger LOG, Exception error) {
-        //TODO ako: test all cases
-        String responseBodyAsString = error.getMessage();
-        if (LOG.isDebugEnabled()) {
-            LOG.debug(responseBodyAsString);
-        }
-        if (responseBodyAsString.contains("index_not_found_exception")) {
-            return new IndexNotFoundException(responseBodyAsString, error);
-        }
-
-        if (responseBodyAsString.contains("resource_already_exists_exception")) {
-            return new IndexAlreadyExistsException(responseBodyAsString, error);
-        }
-
-        if (responseBodyAsString.contains("404")) {
-            LOG.error(responseBodyAsString);
-            return new IndexNotFoundException(responseBodyAsString, error);
-        }
-
-        return new ElasticsearchServerException(responseBodyAsString, error);
-    }
 }

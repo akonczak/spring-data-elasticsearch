@@ -20,27 +20,27 @@ public class JsonMapperImpl implements JsonMapper {
 
     @Override
     public String toJson(Object obj) throws IOException {
-        return new String(mapper.writeValueAsBytes(obj));
+        return mapper.writeValueAsString(obj);
     }
 
     @Override
-    public <T> T mapToObject(String json, Class<T> clazz) throws IOException {
-        return mapper.readValue(json, clazz);
+    public <T> T mapToObject(String json, Class<T> aClass) throws IOException {
+        return mapper.readValue(json, aClass);
     }
 
     @Override
-    public <T> T mapToObject(String json, TypeReference<T> clazz) throws IOException {
-        return mapper.readValue(json, clazz);
+    public <T> T mapToObject(String json, TypeReference<T> aClass) throws IOException {
+        return mapper.readValue(json, aClass);
     }
 
     @Override
-    public <T> T mapToObject(InputStream json, Class<T> clazz) throws IOException {
-        return mapper.readValue(json, clazz);
+    public <T> T mapToObject(InputStream json, Class<T> aClass) throws IOException {
+        return mapper.readValue(json, aClass);
     }
 
     @Override
-    public <T> T mapToObject(InputStream json, TypeReference<T> clazz) throws IOException {
-        return mapper.readValue(json, clazz);
+    public <T> T mapToObject(InputStream json, TypeReference<T> aClass) throws IOException {
+        return mapper.readValue(json, aClass);
     }
 
 

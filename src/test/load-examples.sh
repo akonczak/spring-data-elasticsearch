@@ -40,3 +40,26 @@ echo add mappings
 curl -XPUT "${ES_URL}/twitter/_mapping/_doc?pretty" -H 'Content-Type: application/json' -d @${FILE_DIR}/request/add-mappings.json > ${FILE_DIR}/response/added-mappings.json
 
 
+#index document
+echo adding new document
+curl -XPUT "${ES_URL}/twitter/_doc/1?pretty" -H 'Content-Type: application/json' -d'
+{
+    "user" : "kimchy",
+    "post_date" : "2009-11-15T14:12:12",
+    "message" : "trying out Elasticsearch"
+}
+' > ${FILE_DIR}/response/document-index.json
+
+
+echo overriding docuemnt
+curl -XPUT "${ES_URL}/twitter/_doc/1?pretty" -H 'Content-Type: application/json' -d'
+{
+    "user" : "kimchy v2",
+    "post_date" : "2009-11-15T14:12:13",
+    "message" : "trying out Elasticsearch"
+}
+' > ${FILE_DIR}/response/document-override.json
+
+
+curl -XDELETE "${ES_URL}/twitter/_doc/2?pretty"
+

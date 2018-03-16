@@ -18,10 +18,10 @@
     },
     "settings" : {
       "index" : {
-        "creation_date" : "1519841856687",
+        "creation_date" : "1521202049454",
         "number_of_shards" : "1",
         "number_of_replicas" : "1",
-        "uuid" : "qNDLKPceRgyu6O8iE4xvwA",
+        "uuid" : "pSbVB9eIS3WuAoS8i0bq2g",
         "version" : {
           "created" : "6020199"
         },

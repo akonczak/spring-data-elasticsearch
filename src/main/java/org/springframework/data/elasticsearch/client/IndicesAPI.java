@@ -6,13 +6,14 @@ import org.springframework.data.elasticsearch.client.model.Settings;
 
 import java.io.IOException;
 
-public interface IndexAPI {
+public interface IndicesAPI {
 
     /**
      * Since version 6 ES will support single type per index
      */
     public final String DEFAULT_INDEX_TYPE_NAME = "_doc";
 
+    public boolean create(String indexName);
 
     public boolean create(String indexName, Settings settings, Mappings mappings);
 

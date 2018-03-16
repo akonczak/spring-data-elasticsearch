@@ -28,6 +28,7 @@ public class IndexQuery {
 	private Object object;
 	private Long version;
 	private String indexName;
+	@Deprecated
 	private String type;
 	private String source;
 	private String parentId;
@@ -64,10 +65,11 @@ public class IndexQuery {
 		this.indexName = indexName;
 	}
 
+	@Deprecated
 	public String getType() {
 		return type;
 	}
-
+	@Deprecated
 	public void setType(String type) {
 		this.type = type;
 	}

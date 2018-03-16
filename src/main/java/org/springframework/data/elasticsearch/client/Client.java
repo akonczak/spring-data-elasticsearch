@@ -1,5 +1,7 @@
 package org.springframework.data.elasticsearch.client;
 
+import org.springframework.data.elasticsearch.client.model.JsonMapper;
+
 import java.io.IOException;
 
 /**
@@ -7,10 +9,12 @@ import java.io.IOException;
  */
 public interface Client {
 
-    public IndexAPI getIndexAPI();
+    public IndicesAPI getIndicesAPI();
 
     public DocumentAPI getDocumentAPI();
 
     public void close() throws IOException;
+
+    public JsonMapper getMapper();
 
 }
