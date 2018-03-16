@@ -16,12 +16,18 @@ public interface IndexAPI {
 
     public boolean create(String indexName, Settings settings, Mappings mappings);
 
+    public boolean create(String indexName, String settings, String mappings);
+
     public boolean isExists(String indexName);
 
     public boolean delete(String indexName) ;
 
     public boolean addMappings(String indexName, Mappings mappings);
 
+    public boolean addMappings(String indexName, String mappings);
+
     public IndexDescription getIndex(String indexName);
+
+    public boolean refresh(String indexName);
 
 }

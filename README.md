@@ -8,7 +8,11 @@ Stages and status:
 4. Remover other dependencies (have a chat with Oliver)
 5. [Optional] incorporate several PR from community  
 
-
+Other bits to work on:
+1. Remove old parent child mappings
+2. add new join type (low priority)
+3. clean code and group tests (merge test entities)
+4. Investigating geo (are they 'ES' still supporting to models or they moved to shapes ? ) 
 
 
 

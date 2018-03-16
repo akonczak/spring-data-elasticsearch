@@ -7,4 +7,8 @@ public class IndexNotFoundException extends ResourceException {
     public IndexNotFoundException(String response) {
         super(response);
     }
+
+    public IndexNotFoundException(String response, Throwable e) {
+        super(response, e);
+    }
 }

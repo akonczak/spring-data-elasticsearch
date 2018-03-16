@@ -18,6 +18,7 @@ package org.springframework.data.elasticsearch.core;
 import org.elasticsearch.client.Response;
 import org.springframework.data.domain.Page;
 import org.springframework.data.elasticsearch.client.Client;
+import org.springframework.data.elasticsearch.client.model.Mappings;
 import org.springframework.data.elasticsearch.client.model.Settings;
 import org.springframework.data.elasticsearch.core.convert.ElasticsearchConverter;
 import org.springframework.data.elasticsearch.core.mapping.ElasticsearchPersistentEntity;
@@ -91,12 +92,23 @@ public interface ElasticsearchOperations {
 
 	/**
 	 * Create mapping for a given indexName and type
-	 *
+	 * @Deprecated - ES 6+ will support single type on index
 	 * @param indexName
 	 * @param type
 	 * @param mappings
 	 */
-	boolean putMapping(String indexName, String type, Object mappings);
+	@Deprecated
+	boolean putMapping(String indexName, String type, Mappings mappings);
+
+	/**
+	 * Create mapping for a given indexName and type
+	 * @Deprecated - ES 6+ will support single type on index
+	 * @param indexName
+	 * @param type
+	 * @param mappings
+	 */
+	@Deprecated
+	boolean putMapping(String indexName, String type, String mappings);
 
 	/**
 	 * Create mapping for a class
@@ -104,7 +116,8 @@ public interface ElasticsearchOperations {
 	 * @param clazz
 	 * @param mappings
 	 */
-	<T> boolean putMapping(Class<T> clazz, Object mappings);
+	<T> boolean putMapping(Class<T> clazz, Mappings mappings);
+	<T> boolean putMapping(Class<T> clazz, String mappings);
 
 
 	/**
@@ -113,7 +126,7 @@ public interface ElasticsearchOperations {
 	 * @param clazz
 	 * @param <T>
 	 */
-	<T> Map getMapping(Class<T> clazz);
+	<T> Mappings getMapping(Class<T> clazz);
 
 	/**
 	 * Get mapping for a given indexName and type
@@ -121,7 +134,10 @@ public interface ElasticsearchOperations {
 	 * @param indexName
 	 * @param type
 	 */
-	Map getMapping(String indexName, String type);
+	@Deprecated
+	Mappings getMapping(String indexName, String type);
+
+	Map<String, Mappings> getMapping(String indexName);
 
 	/**
 	 * Get settings for a given indexName

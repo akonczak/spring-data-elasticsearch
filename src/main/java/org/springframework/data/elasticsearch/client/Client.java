@@ -9,6 +9,8 @@ public interface Client {
 
     public IndexAPI getIndexAPI();
 
+    public DocumentAPI getDocumentAPI();
+
     public void close() throws IOException;
 
 }

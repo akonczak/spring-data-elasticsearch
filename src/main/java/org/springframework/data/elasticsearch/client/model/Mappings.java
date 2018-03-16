@@ -1,5 +1,7 @@
 package org.springframework.data.elasticsearch.client.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
 
 import java.util.Map;
@@ -9,37 +11,25 @@ import java.util.Map;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-//@JsonIgnoreProperties(ignoreUnknown = true)
+@JsonIgnoreProperties(ignoreUnknown = true)
 //@JsonInclude(JsonInclude.Include.NON_NULL)
 public class Mappings {
 
     private Map<String, Object> dynamicTemplates;
     private Map<String, Property> properties;
+    private Boolean dynamic;
+    @JsonProperty(value = "date_detection")
+    private Boolean dateDetection;
+
 
     @Override
     public String toString() {
-        return "Mappings{" +
-                "dynamicTemplates=" + dynamicTemplates +
-                ", properties=" + properties +
-                '}';
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof Mappings)) return false;
-
-        Mappings mappings = (Mappings) o;
-
-        if (dynamicTemplates != null ? !dynamicTemplates.equals(mappings.dynamicTemplates) : mappings.dynamicTemplates != null)
-            return false;
-        return properties != null ? properties.equals(mappings.properties) : mappings.properties == null;
-    }
-
-    @Override
-    public int hashCode() {
-        int result = dynamicTemplates != null ? dynamicTemplates.hashCode() : 0;
-        result = 31 * result + (properties != null ? properties.hashCode() : 0);
-        return result;
+        final StringBuffer sb = new StringBuffer("Mappings{");
+        sb.append("dynamicTemplates=").append(dynamicTemplates);
+        sb.append(", properties=").append(properties);
+        sb.append(", dynamic=").append(dynamic);
+        sb.append(", dateDetection=").append(dateDetection);
+        sb.append('}');
+        return sb.toString();
     }
 }

@@ -31,8 +31,8 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.old.entities.SampleEntity;
-import org.springframework.data.old.entities.UseServerConfigurationEntity;
+import org.springframework.data.elasticsearch.client.model.Mappings;
+import org.springframework.data.elasticsearch.client.model.Property;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
@@ -66,11 +66,11 @@ public class ElasticsearchTemplateTests {
 	@Before
 	public void before() {
 		template.deleteIndex(TEST_INDEX_NAME);
-		template.deleteIndex(BasciDocument.class);
+		template.deleteIndex(BasicDocument.class);
 	}
 
 	@Test
-	public void shouldCreateBasicIndex() throws IOException {
+	public void shouldCreateBasicIndexBaseOnIndexName() throws IOException {
 		//given
 
 		//when
@@ -85,9 +85,9 @@ public class ElasticsearchTemplateTests {
 		//given
 
 		//when
-		template.createIndex(BasciDocument.class);
+		template.createIndex(BasicDocument.class);
 		//then
-		assertThat(template.indexExists(BasciDocument.class), is(true));
+		assertThat(template.indexExists(BasicDocument.class), is(true));
 
 	}
 
@@ -96,9 +96,14 @@ public class ElasticsearchTemplateTests {
 		//given
 
 		//when
-		template.createIndex(BasciDocument.class);
+		template.createIndex(BasicDocument.class);
+		template.putMapping(BasicDocument.class);
 		//then
-		assertThat(template.indexExists(BasciDocument.class), is(true));
+		assertThat(template.indexExists(BasicDocument.class), is(true));
+		final Mappings mapping = template.getMapping(BasicDocument.class);
+		assertThat(mapping.getProperties().size(), is(1));
+		final Property title = mapping.getProperties().get("title");
+		assertThat(title.getType(), is("text"));
 
 	}
 

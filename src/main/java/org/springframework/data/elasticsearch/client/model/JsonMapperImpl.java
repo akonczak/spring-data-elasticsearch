@@ -7,34 +7,38 @@ import com.fasterxml.jackson.databind.SerializationFeature;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.Map;
 
-public class ModelMapper {
+public class JsonMapperImpl implements JsonMapper {
 
     final private ObjectMapper mapper;
 
-    public ModelMapper() {
+    public JsonMapperImpl() {
         mapper = new ObjectMapper();
         mapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
         mapper.enable(SerializationFeature.INDENT_OUTPUT);
     }
 
+    @Override
     public String toJson(Object obj) throws IOException {
         return new String(mapper.writeValueAsBytes(obj));
     }
 
+    @Override
     public <T> T mapToObject(String json, Class<T> clazz) throws IOException {
         return mapper.readValue(json, clazz);
     }
 
+    @Override
     public <T> T mapToObject(String json, TypeReference<T> clazz) throws IOException {
         return mapper.readValue(json, clazz);
     }
 
+    @Override
     public <T> T mapToObject(InputStream json, Class<T> clazz) throws IOException {
         return mapper.readValue(json, clazz);
     }
 
+    @Override
     public <T> T mapToObject(InputStream json, TypeReference<T> clazz) throws IOException {
         return mapper.readValue(json, clazz);
     }

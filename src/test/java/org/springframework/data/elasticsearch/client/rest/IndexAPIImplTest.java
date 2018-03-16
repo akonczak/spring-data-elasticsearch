@@ -6,7 +6,6 @@ import org.springframework.data.elasticsearch.client.Client;
 import org.springframework.data.elasticsearch.client.IndexAPI;
 import org.springframework.data.elasticsearch.client.RestClientFactoryBean;
 import org.springframework.data.elasticsearch.client.model.*;
-import org.springframework.data.elasticsearch.utils.IndexBuilder;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -17,7 +16,7 @@ import static org.junit.Assert.assertThat;
 
 public class IndexAPIImplTest {
 
-    ModelMapper mapper;
+    JsonMapper mapper;
     RestClientFactoryBean factoryBean = new RestClientFactoryBean();
     Client client;
     IndexAPI  indexAPI;
@@ -26,7 +25,7 @@ public class IndexAPIImplTest {
 
     @Before
     public void init() throws Exception {
-        mapper = new ModelMapper();
+        mapper = new JsonMapperImpl();
         factoryBean.setClusterNodes("localhost:9260");
         client = factoryBean.getObject();
         indexAPI = client.getIndexAPI();

@@ -15,7 +15,7 @@ public class IndexTest {
 
     final static int ES_VERSION = 6;
 
-    private final ModelMapper modelMapper = new ModelMapper();
+    private final JsonMapperImpl modelMapper = new JsonMapperImpl();
 
     private String readJsonFile(String filePath) throws IOException {
         try (InputStreamReader in = new InputStreamReader(getClass().getClassLoader().getResourceAsStream(filePath))) {

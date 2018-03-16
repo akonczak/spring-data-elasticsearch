@@ -23,11 +23,13 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.data.domain.Page;
+import org.springframework.data.elasticsearch.ElasticsearchException;
 import org.springframework.data.elasticsearch.annotations.Document;
 import org.springframework.data.elasticsearch.annotations.Mapping;
 import org.springframework.data.elasticsearch.annotations.Setting;
 import org.springframework.data.elasticsearch.client.Client;
 import org.springframework.data.elasticsearch.client.model.Index;
+import org.springframework.data.elasticsearch.client.model.Mappings;
 import org.springframework.data.elasticsearch.client.model.Settings;
 import org.springframework.data.elasticsearch.client.model.Store;
 import org.springframework.data.elasticsearch.core.convert.ElasticsearchConverter;
@@ -45,6 +47,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.*;
 
+import static org.springframework.data.elasticsearch.client.IndexAPI.DEFAULT_INDEX_TYPE_NAME;
 import static org.springframework.util.StringUtils.hasText;
 
 /**
@@ -66,6 +69,7 @@ public class ElasticsearchTemplate implements ElasticsearchOperations, Applicati
     private Client client;
     private ElasticsearchConverter elasticsearchConverter;
     private ResultsMapper resultsMapper;
+    private MappingBuilder mappingBuilder;
     private String searchTimeout;
 
     public ElasticsearchTemplate(Client client) {
@@ -100,6 +104,7 @@ public class ElasticsearchTemplate implements ElasticsearchOperations, Applicati
         this.client = client;
         this.elasticsearchConverter = elasticsearchConverter;
         this.resultsMapper = resultsMapper;
+        this.mappingBuilder = new MappingBuilder();
     }
 
     @Override
@@ -119,77 +124,75 @@ public class ElasticsearchTemplate implements ElasticsearchOperations, Applicati
     @Override
     public boolean createIndex(String indexName){
         Assert.notNull(indexName, "Missing index name for operation create");
-        return client.getIndexAPI().create(indexName, null, null);
+        return client.getIndexAPI().create(indexName, (String)null, (String)null);
     }
 
     @Override
     public <T> boolean putMapping(Class<T> clazz) {
-//		if (clazz.isAnnotationPresent(Mapping.class)) {
-//            String mappingPath = clazz.getAnnotation(Mapping.class).mappingPath();
-//			if (hasText(mappingPath)) {
-//				String mappings = readFileFromClasspath(mappingPath);
-//				if (hasText(mappings)) {
-//					return putMapping(clazz, mappings);
-//				}
-//			} else {
-//				logger.info("mappingPath in @Mapping has to be defined. Building mappings using @Field");
-//			}
-//		}
-//		ElasticsearchPersistentEntity<T> persistentEntity = getPersistentEntityFor(clazz);
-//		XContentBuilder xContentBuilder = null;
-//		try {
-//
-//			ElasticsearchPersistentProperty property = persistentEntity.getRequiredIdProperty();
-//
-//			xContentBuilder = buildMapping(clazz, persistentEntity.getIndexType(),
-//					property.getFieldName(), persistentEntity.getParentType());
-//		} catch (Exception e) {
-//			throw new ElasticsearchException("Failed to build mapping for " + clazz.getSimpleName(), e);
-//		}
-//		return putMapping(clazz, xContentBuilder);
-        return false;
+		if (clazz.isAnnotationPresent(Mapping.class)) {
+            String mappingPath = clazz.getAnnotation(Mapping.class).mappingPath();
+			if (hasText(mappingPath)) {
+				String mappings = readFileFromClasspath(mappingPath);
+				if (hasText(mappings)) {
+					return putMapping(clazz, mappings);
+				}
+			} else {
+				logger.info("mappingPath in @Mapping has to be defined. Building mappings using @Field");
+			}
+		}
+		ElasticsearchPersistentEntity<T> persistentEntity = getPersistentEntityFor(clazz);
+		Mappings mappings=null;
+		try {
+
+			ElasticsearchPersistentProperty property = persistentEntity.getRequiredIdProperty();
+
+			mappings = mappingBuilder.buildMapping(clazz, persistentEntity.getIndexType(),
+					property.getFieldName(), persistentEntity.getParentType());
+		} catch (Exception e) {
+			throw new ElasticsearchException("Failed to build mapping for " + clazz.getSimpleName(), e);
+		}
+		return putMapping(clazz, mappings);
     }
 
     @Override
-    public <T> boolean putMapping(Class<T> clazz, Object mapping) {
+    public <T> boolean putMapping(Class<T> clazz, Mappings mapping) {
+        return putMapping(getPersistentEntityFor(clazz).getIndexName(), getPersistentEntityFor(clazz).getIndexType(),
+                mapping);
+    }
+
+    public <T> boolean putMapping(Class<T> clazz, String mapping) {
         return putMapping(getPersistentEntityFor(clazz).getIndexName(), getPersistentEntityFor(clazz).getIndexType(),
                 mapping);
     }
 
     @Override
-    public boolean putMapping(String indexName, String type, Object mapping) {
-/*		Assert.notNull(indexName, "No index defined for putMapping()");
-		Assert.notNull(type, "No type defined for putMapping()");
-		PutMappingRequestBuilder requestBuilder = client.admin().indices().preparePutMapping(indexName).setType(type);
-		if (mapping instanceof String) {
-			requestBuilder.setSource(String.valueOf(mapping));
-		} else if (mapping instanceof Map) {
-			requestBuilder.setSource((Map) mapping);
-		} else if (mapping instanceof XContentBuilder) {
-			requestBuilder.setSource((XContentBuilder) mapping);
-		}
-		return requestBuilder.execute().actionGet().isAcknowledged();*/
-        return false;
+    public boolean putMapping(String indexName, String type, Mappings mapping) {
+        return client.getIndexAPI().addMappings(indexName, mapping);
+    }
+    @Override
+    public boolean putMapping(String indexName, String type, String mapping) {
+        return client.getIndexAPI().addMappings(indexName, mapping);
     }
 
     @Override
-    public Map getMapping(String indexName, String type) {
-/*		Assert.notNull(indexName, "No index defined for putMapping()");
+    public Mappings getMapping(String indexName, String type) {
+		Assert.notNull(indexName, "No index defined for putMapping()");
 		Assert.notNull(type, "No type defined for putMapping()");
-		Map mappings = null;
-		try {
-			mappings = client.admin().indices().getMappings(new GetMappingsRequest().indices(indexName).types(type))
-					.actionGet().getMappings().get(indexName).get(type).getSourceAsMap();
-		} catch (Exception e) {
-			throw new ElasticsearchException(
-					"Error while getting mapping for indexName : " + indexName + " type : " + type + " " + e.getMessage());
-		}
-		return mappings;*/
-        return null;
+		Mappings mappings = getMapping(indexName).get(DEFAULT_INDEX_TYPE_NAME);
+        if (mappings == null) {
+            throw new ElasticsearchException(
+                    String.format("Missing [%s] type in [%s] index", type, indexName));
+        }
+        return mappings;
     }
 
     @Override
-    public <T> Map getMapping(Class<T> clazz) {
+    public Map<String,Mappings> getMapping(String indexName){
+        return client.getIndexAPI().getIndex(indexName).getMappings();
+    }
+
+    @Override
+    public <T> Mappings getMapping(Class<T> clazz) {
         return getMapping(getPersistentEntityFor(clazz).getIndexName(), getPersistentEntityFor(clazz).getIndexType());
     }
 
@@ -513,12 +516,12 @@ public class ElasticsearchTemplate implements ElasticsearchOperations, Applicati
 
     @Override
     public String index(IndexQuery query) {
-/*		String documentId = prepareIndex(query).execute().actionGet().getId();
-		// We should call this because we are not going through a mapper.
-		if (query.getObject() != null) {
-			setPersistentEntityId(query.getObject(), documentId);
-		}
-		return documentId;*/
+//		String documentId = prepareIndex(query).execute().actionGet().getId();
+//		// We should call this because we are not going through a mapper.
+//		if (query.getObject() != null) {
+//			setPersistentEntityId(query.getObject(), documentId);
+//		}
+//		return documentId;
         return null;
     }
 
@@ -995,7 +998,7 @@ public class ElasticsearchTemplate implements ElasticsearchOperations, Applicati
 		}
 		return searchRequestBuilder;
 	}
-
+    */
 	private IndexRequestBuilder prepareIndex(IndexQuery query) {
 		try {
 			String indexName = isBlank(query.getIndexName())
@@ -1033,7 +1036,7 @@ public class ElasticsearchTemplate implements ElasticsearchOperations, Applicati
 		} catch (IOException e) {
 			throw new ElasticsearchException("failed to index the document [id: " + query.getId() + "]", e);
 		}
-	}*/
+	}
 
     @Override
     public void refresh(String indexName) {
