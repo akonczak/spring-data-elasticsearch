@@ -43,25 +43,3 @@ public class DocumentResponse {
     }
 }
 
-@NoArgsConstructor
-@AllArgsConstructor
-@Builder
-@Getter
-@Setter
-class Shards {
-    @JsonProperty(value = "total")
-    private Integer total;
-    @JsonProperty(value = "successful")
-    private Integer successful;
-    @JsonProperty(value = "failed")
-    private Integer failed;
-
-    @Override
-    public String toString() {
-        return "Shards{" +
-                "total=" + total +
-                ", successful=" + successful +
-                ", failed=" + failed +
-                '}';
-    }
-}

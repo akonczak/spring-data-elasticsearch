@@ -58,7 +58,7 @@ import static org.junit.Assert.assertThat;
 @ContextConfiguration("classpath:elasticsearch-template-test.xml")
 public class ElasticsearchTemplateTests {
 
-	private final static String TEST_INDEX_NAME = "unit_test_template";
+	private final static String TEST_INDEX_NAME = "unit_test_elasticsearch_template_tests";
 
 	@Autowired
 	private ElasticsearchTemplate template;
@@ -77,7 +77,6 @@ public class ElasticsearchTemplateTests {
 		template.createIndex(TEST_INDEX_NAME);
 		//then
 		assertThat(template.indexExists(TEST_INDEX_NAME), is(true));
-
 	}
 
 	@Test
@@ -88,7 +87,6 @@ public class ElasticsearchTemplateTests {
 		template.createIndex(BasicDocument.class);
 		//then
 		assertThat(template.indexExists(BasicDocument.class), is(true));
-
 	}
 
 	@Test
@@ -104,7 +102,6 @@ public class ElasticsearchTemplateTests {
 		assertThat(mapping.getProperties().size(), is(1));
 		final Property title = mapping.getProperties().get("title");
 		assertThat(title.getType(), is("text"));
-
 	}
 
 

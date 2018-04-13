@@ -13,6 +13,8 @@ public interface Client {
 
     public DocumentAPI getDocumentAPI();
 
+    public SearchAPI getSearchAPI();
+
     public void close() throws IOException;
 
     public JsonMapper getMapper();

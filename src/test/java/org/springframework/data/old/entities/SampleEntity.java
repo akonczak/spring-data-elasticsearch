@@ -41,7 +41,7 @@ import static org.springframework.data.elasticsearch.annotations.FieldType.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-@Document(indexName = "test-index-sample", type = "test-type", shards = 1, replicas = 0, refreshInterval = "-1")
+@Document(indexName = "unit-test-SampleEntity", type = "test-type", shards = 1, replicas = 0, refreshInterval = "-1")
 public class SampleEntity {
 
 	@Id

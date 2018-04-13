@@ -69,10 +69,10 @@ public class Criteria {
 	/**
 	 * Creates a new Criteria with provided field name
 	 *
-	 * @param fieldname
+	 * @param fieldName
 	 */
-	public Criteria(String fieldname) {
-		this(new SimpleField(fieldname));
+	public Criteria(String fieldName) {
+		this(new SimpleField(fieldName));
 	}
 
 	/**

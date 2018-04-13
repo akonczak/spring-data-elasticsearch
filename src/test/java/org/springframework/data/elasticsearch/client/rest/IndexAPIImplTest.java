@@ -21,7 +21,7 @@ public class IndexAPIImplTest {
     Client client;
     IndicesAPI indexAPI;
 
-    final String indexName = "index_api_test";
+    final String indexName = "unit-test-IndexAPIImplTest";
 
     @Before
     public void init() throws Exception {

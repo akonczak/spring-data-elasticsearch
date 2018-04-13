@@ -21,6 +21,7 @@ public class ClientImpl implements Client, AutoCloseable {
     private IndicesAPI indexAPI;
     private DocumentAPI documentAPI;
     private RestClient nativeClient;
+    private SearchAPI searchAPI;
     private JsonMapper mapper;
 
     public ClientImpl(JsonMapper mapper, String... hosts) {
@@ -39,6 +40,7 @@ public class ClientImpl implements Client, AutoCloseable {
 
         indexAPI = new IndicesAPIImpl(this.mapper, nativeClient);
         documentAPI = new DocumentAPIImpl(this.mapper, nativeClient);
+        searchAPI = new SearchAPIImpl(this.mapper, nativeClient);
     }
 
     public ClientImpl(String... hosts) {
@@ -53,6 +55,11 @@ public class ClientImpl implements Client, AutoCloseable {
     @Override
     public DocumentAPI getDocumentAPI() {
         return documentAPI;
+    }
+
+    @Override
+    public SearchAPI getSearchAPI() {
+        return searchAPI;
     }
 
     @Override

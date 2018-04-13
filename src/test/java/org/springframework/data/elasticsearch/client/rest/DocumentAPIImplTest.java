@@ -21,7 +21,7 @@ public class DocumentAPIImplTest {
     IndicesAPI indicesAPI;
     DocumentAPI documentAPI;
 
-    final String indexName = "document_api_test";
+    final String indexName = "unit-test-DocumentAPIImplTest";
 
     @Before
     public void init() throws Exception {
