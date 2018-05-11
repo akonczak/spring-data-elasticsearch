@@ -2,6 +2,7 @@ package org.springframework.data.elasticsearch.client.rest;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.springframework.data.elasticsearch.TestBase;
 import org.springframework.data.elasticsearch.client.*;
 import org.springframework.data.elasticsearch.client.model.*;
 
@@ -9,7 +10,7 @@ import static org.hamcrest.Matchers.*;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.fail;
 
-public class SearchAPIImplTest {
+public class SearchAPIImplTest extends TestBase{
 
 
     JsonMapper mapper;
@@ -19,8 +20,6 @@ public class SearchAPIImplTest {
     DocumentAPI documentAPI;
     SearchAPI searchAPI;
 
-    final String indexName = "unit-test-search-api-impl-test";
-
     @Before
     public void init() throws Exception {
         mapper = new JsonMapperImpl();
@@ -29,12 +28,12 @@ public class SearchAPIImplTest {
         indicesAPI = client.getIndicesAPI();
         documentAPI = client.getDocumentAPI();
         searchAPI = client.getSearchAPI();
-        if (indicesAPI.isExists(indexName)) {
-            indicesAPI.delete(indexName);
+        if (indicesAPI.isExists(getIndexName())) {
+            indicesAPI.delete(getIndexName());
         }
-        indicesAPI.create(indexName);
-        documentAPI.index(indexName, "1", "{\"title\":\"test title\"}");
-        indicesAPI.refresh(indexName);
+        indicesAPI.create(getIndexName());
+        documentAPI.index(getIndexName(), "1", "{\"title\":\"test title\"}");
+        indicesAPI.refresh(getIndexName());
     }
 
     @Test
@@ -42,7 +41,7 @@ public class SearchAPIImplTest {
         //given
         //when
         //then
-        SearchResponse searchResponse = searchAPI.searchRaw(indexName, "{\n" +
+        SearchResponse searchResponse = searchAPI.searchRaw(getIndexName(), "{\n" +
                 "    \"query\": {\n" +
                 "        \"bool\" : {\n" +
                 "            \"must\" : {\n" +
@@ -57,7 +56,7 @@ public class SearchAPIImplTest {
         assertThat(searchResponse.getShards().getSkipped(), is(0));
         assertThat(searchResponse.getShards().getFailed(), is(0));
         assertThat(searchResponse.isTimedOut(), is(false));
-        assertThat(searchResponse.getHits().getTotal(), is(0L));
+        assertThat(searchResponse.getHits().getTotal(), is(1L));
     }
 
 }

@@ -2,7 +2,9 @@ package org.springframework.data.elasticsearch.client.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonRawValue;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import lombok.*;
+import org.springframework.data.elasticsearch.json.SourceDeserialiser;
 
 import java.util.List;
 
@@ -32,6 +34,7 @@ public class SearchEntry {
     private String score;
     @JsonRawValue
     @JsonProperty(value = "_source")
+    @JsonDeserialize(using = SourceDeserialiser.class)
     private String source;
 
     @Override

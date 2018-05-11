@@ -31,6 +31,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.elasticsearch.TestBase;
 import org.springframework.data.elasticsearch.client.model.Mappings;
 import org.springframework.data.elasticsearch.client.model.Property;
 import org.springframework.test.context.ContextConfiguration;
@@ -56,16 +57,14 @@ import static org.junit.Assert.assertThat;
  */
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration("classpath:elasticsearch-template-test.xml")
-public class ElasticsearchTemplateTests {
-
-	private final static String TEST_INDEX_NAME = "unit_test_elasticsearch_template_tests";
+public class ElasticsearchTemplateTests extends TestBase{
 
 	@Autowired
 	private ElasticsearchTemplate template;
 
 	@Before
 	public void before() {
-		template.deleteIndex(TEST_INDEX_NAME);
+		template.deleteIndex(getIndexName());
 		template.deleteIndex(BasicDocument.class);
 	}
 
@@ -74,9 +73,9 @@ public class ElasticsearchTemplateTests {
 		//given
 
 		//when
-		template.createIndex(TEST_INDEX_NAME);
+		template.createIndex(getIndexName());
 		//then
-		assertThat(template.indexExists(TEST_INDEX_NAME), is(true));
+		assertThat(template.indexExists(getIndexName()), is(true));
 	}
 
 	@Test

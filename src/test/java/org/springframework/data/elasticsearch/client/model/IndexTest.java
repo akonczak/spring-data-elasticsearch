@@ -40,7 +40,7 @@ public class IndexTest {
         assertThat(indexDescription.getAliases().size(), is(2));
         assertThat(indexDescription.getSettings().getIndex().getNumberOfReplicas(), is(1));
         assertThat(indexDescription.getSettings().getIndex().getNumberOfShards(), is(1));
-        assertThat(indexDescription.getMappings().get("type1").getProperties().size(), is(2));
+        assertThat(indexDescription.getMappings().get("_doc").getProperties().size(), is(2));
     }
 
     @Test
@@ -56,7 +56,7 @@ public class IndexTest {
         assertThat(indexDescription.getAliases().size(), is(2));
         assertThat(indexDescription.getSettings().getIndex().getNumberOfReplicas(), is(1));
         assertThat(indexDescription.getSettings().getIndex().getNumberOfShards(), is(1));
-        assertThat(indexDescription.getMappings().get("type1").getProperties().size(), is(2));
+        assertThat(indexDescription.getMappings().get("_doc").getProperties().size(), is(2));
     }
 
 

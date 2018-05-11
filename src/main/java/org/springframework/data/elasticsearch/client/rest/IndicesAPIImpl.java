@@ -55,7 +55,7 @@ public class IndicesAPIImpl implements IndicesAPI {
 	@Override
 	public boolean create(String indexName, @Nullable String settings, @Nullable String mappings) {
 		try {
-			String template = "{ \"settings\": %s, \"%s\":{ \"mappings\": %s }}";
+			String template = "{ \"settings\": %s, \"mappings\": { \"%s\": %s }}";
 			Map<String, String> params = Collections.emptyMap();
 			final String formattedString = String.format(
 					template,

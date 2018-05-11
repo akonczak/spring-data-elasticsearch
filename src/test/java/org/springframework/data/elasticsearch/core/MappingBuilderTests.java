@@ -23,6 +23,7 @@ import static org.junit.Assert.*;
 import java.io.IOException;
 
 import org.junit.Test;
+import org.springframework.data.elasticsearch.TestBase;
 import org.springframework.data.elasticsearch.client.model.Mappings;
 import org.springframework.data.elasticsearch.client.model.Property;
 import org.springframework.data.old.entities.*;
@@ -35,7 +36,7 @@ import org.springframework.data.old.entities.*;
  * @author Mohsin Husen
  * @author Keivn Leturc
  */
-public class MappingBuilderTests {
+public class MappingBuilderTests extends TestBase{
 
 	private MappingBuilder mappingBuilder = new MappingBuilder();
 
