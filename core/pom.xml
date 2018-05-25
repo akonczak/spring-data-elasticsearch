@@ -3,40 +3,37 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>org.springframework.data</groupId>
-    <artifactId>spring-data-elasticsearch-parent</artifactId>
+    <artifactId>spring-data-elasticsearch</artifactId>
     <version>3.1.0.BUILD-SNAPSHOT</version>
-    <packaging>pom</packaging>
 
     <parent>
-        <groupId>org.springframework.data.build</groupId>
-        <artifactId>spring-data-parent</artifactId>
-        <version>2.1.0.BUILD-SNAPSHOT</version>
+        <groupId>org.springframework.data</groupId>
+        <artifactId>spring-data-elasticsearch-parent</artifactId>
+        <version>3.1.0.BUILD-SNAPSHOT</version>
+        <relativePath>../pom.xml</relativePath>
     </parent>
 
-    <name>Spring Data Elasticsearch</name>
-    <description>Spring Data Implementation for Elasticsearch</description>
-    <url>https://github.com/spring-projects/spring-data-elasticsearch</url>
+    <name>Spring Data Elasticsearch - core</name>
+    <description>Spring Data Implementation for Elasticsearch - core</description>
 
-    <properties>
-        <commonscollections>3.2.1</commonscollections>
-        <commonslang>2.6</commonslang>
-        <elasticsearch>6.2.2</elasticsearch>
-        <log4j>2.9.1</log4j>
-        <springdata.commons>2.1.0.BUILD-SNAPSHOT</springdata.commons>
-        <springdata.commons>2.1.0.BUILD-SNAPSHOT</springdata.commons>
-        <java-module-name>spring.data.elasticsearch</java-module-name>
-
-    </properties>
-
-    <modules>
-        <module>core</module>
-        <module>client</module>
-        <module>rest-client</module>
-    </modules>
-
-    <dependencyManagement>
     <dependencies>
 
+        <!-- Spring -->
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-context</artifactId>
+            <exclusions>
+                <exclusion>
+                    <groupId>commons-logging</groupId>
+                    <artifactId>commons-logging</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-tx</artifactId>
+        </dependency>
 
         <!-- SPRING DATA -->
         <dependency>
@@ -92,6 +89,16 @@
             <scope>test</scope>
         </dependency>
 
+        <!-- Jackson JSON Mapper -->
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-core</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-databind</artifactId>
+        </dependency>
+
         <!-- CDI -->
         <dependency>
             <groupId>javax.enterprise</groupId>
@@ -99,6 +106,19 @@
             <version>${cdi}</version>
             <scope>provided</scope>
             <optional>true</optional>
+        </dependency>
+
+        <!-- Test -->
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-test</artifactId>
+            <scope>test</scope>
+            <exclusions>
+                <exclusion>
+                    <groupId>ch.qos.logback</groupId>
+                    <artifactId>logback-classic</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
 
         <dependency>
@@ -134,7 +154,7 @@
         </dependency>
 
         <dependency>
-      <!-- required by elasticsearch -->
+            <!-- required by elasticsearch -->
             <groupId>org.elasticsearch.plugin</groupId>
             <artifactId>transport-netty4-client</artifactId>
             <version>${elasticsearch}</version>
@@ -149,7 +169,7 @@
         </dependency>
 
     </dependencies>
-    </dependencyManagement>
+
     <build>
         <plugins>
             <plugin>
@@ -167,58 +187,6 @@
         </plugins>
     </build>
 
-    <profiles>
-        <profile>
-            <id>release</id>
-            <build>
-                <plugins>
-                    <plugin>
-                        <groupId>org.jfrog.buildinfo</groupId>
-                        <artifactId>artifactory-maven-plugin</artifactId>
-                        <inherited>false</inherited>
-                    </plugin>
-                </plugins>
-            </build>
-        </profile>
-    </profiles>
 
-    <developers>
-        <developer>
-            <id>biomedcentral</id>
-            <name>BioMed Central Development Team</name>
-            <timezone>+0</timezone>
-        </developer>
-    </developers>
-
-    <repositories>
-        <repository>
-            <id>spring-libs-snapshot</id>
-            <url>https://repo.spring.io/libs-snapshot</url>
-        </repository>
-    </repositories>
-
-    <pluginRepositories>
-        <pluginRepository>
-            <id>spring-plugins-release</id>
-            <url>https://repo.spring.io/plugins-release</url>
-        </pluginRepository>
-    </pluginRepositories>
-
-    <scm>
-        <url>https://github.com/spring-projects/spring-data-elasticsearch</url>
-        <connection>scm:git:git://github.com/spring-projects/spring-data-elasticsearch.git</connection>
-        <developerConnection>scm:git:ssh://git@github.com/spring-projects/spring-data-elasticsearch.git
-        </developerConnection>
-    </scm>
-
-    <ciManagement>
-        <system>Bamboo</system>
-        <url>https://build.spring.io/browse/SPRINGDATAES</url>
-    </ciManagement>
-
-    <issueManagement>
-        <system>JIRA</system>
-        <url>https://jira.spring.io/browse/DATAES</url>
-    </issueManagement>
 
 </project>
